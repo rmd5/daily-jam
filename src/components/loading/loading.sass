@@ -1,0 +1,44 @@
+.loader
+    z-index: 50
+    width: 100%
+    height: 100%
+    background-color: #f0f0f0
+
+    .spinner
+        z-index: 51
+        position: absolute
+        transform: translate(-50%, -50%)
+        top: 50%
+        left: 50%
+        width: 124px
+        height: 124px
+
+        .jam
+            position: absolute
+            z-index: 52
+            width: 120px
+            height: 120px
+
+        .vinyl
+            z-index: 52
+            width: 120px
+            height: 120px
+            animation: spin 3s linear infinite
+
+        .arm
+            z-dndex: 52
+            width: 80px
+            height: 80px
+            position: "absolute"
+            transform: translate(65px, -130px)
+            animation: bob 1s linear infinite
+
+@keyframes spin
+    100%  
+        transform: rotate(360deg)
+
+@keyframes bob
+    50%  
+        transform: translate(65px, -130px) rotate(10deg)
+    100%
+        transform: translate(65px, -130px) rotate(0deg)
