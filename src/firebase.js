@@ -2,6 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
+import agent from "./constants/agent";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -18,9 +19,15 @@ const firebaseConfig = {
 };
 
 export const fetchToken = (setTokenFound) => {
-	return getToken(messaging, { vapidKey: process.env.REACT_APP_VAPID_KEY }).then((currentToken) => {
+	return getToken(messaging, { vapidKey: process.env.REACT_APP_VAPID_KEY }).then(async (currentToken) => {
 		if (currentToken) {
 			console.log('current token for client: ', currentToken);
+			let [status, data, error] = await agent.post("/notifications/subscribe", { token: currentToken })
+			if (error) {
+				console.log(error)
+			} else {
+				console.log(data)
+			}
 			setTokenFound(true);
 			// Track the token -> client mapping, by sending to backend server
 			// show on the UI that permission is secured
