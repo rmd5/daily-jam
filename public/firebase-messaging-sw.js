@@ -21,14 +21,35 @@ const messaging = firebase.messaging();
 messaging.onBackgroundMessage(function (payload) {
     console.log('Received background message ', payload);
     data = payload.data
+    console.log(data)
 
     const notificationTitle = data.title;
     const notificationOptions = {
         body: data.body,
         badge: data.icon,
-        icon: data.icon
+        icon: data.icon,
+        data: {
+            url: "https://daily-jam.pages.dev/",
+        }
     };
 
     self.registration.showNotification(notificationTitle,
         notificationOptions);
+});
+
+self.addEventListener('notificationclick', function (event) {
+    event.notification.close();
+
+    event.waitUntil(
+        clients.matchAll().then(function (clientList) {
+                for (var i = 0; i < clientList.length; i++) {
+                    var client = clientList[i];
+                    if (client.url == '/' && 'focus' in client)
+                        return client.focus();
+                }
+                if (clients.openWindow) {
+                    return clients.openWindow('/');
+                }
+            })
+    );
 });
