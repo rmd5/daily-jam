@@ -42,6 +42,7 @@ self.addEventListener('notificationclick', function (event) {
 
     event.waitUntil(
         clients.matchAll().then(function (clientList) {
+            console.log(clientList)
                 for (var i = 0; i < clientList.length; i++) {
                     var client = clientList[i];
                     if (client.url == '/' && 'focus' in client)

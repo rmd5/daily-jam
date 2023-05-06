@@ -22,11 +22,15 @@ export const fetchToken = (setTokenFound) => {
 	return getToken(messaging, { vapidKey: process.env.REACT_APP_VAPID_KEY }).then(async (currentToken) => {
 		if (currentToken) {
 			console.log('current token for client: ', currentToken);
-			let [status, data, error] = await agent.post("/notifications/subscribe", { token: currentToken })
-			if (error) {
-				console.log(error)
-			} else {
-				console.log(data)
+			let subscribed = await localStorage.getItem("dailyjam:notifications")
+			if (!subscribed) {
+				let [status, data, error] = await agent.post("/notifications/subscribe", { token: currentToken })
+				if (error) {
+					console.log(error)
+				} else {
+					localStorage.setItem("dailyjam:notifications", "subscribed")
+					console.log(data)
+				}
 			}
 			setTokenFound(true);
 			// Track the token -> client mapping, by sending to backend server
