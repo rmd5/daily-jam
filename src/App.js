@@ -4,6 +4,7 @@ import { fetchToken } from "./firebase";
 
 import history from "./history";
 import { Router, Switch, Route } from "react-router";
+import Home from "./components/home/home";
 
 function App() {
 	fetchToken(() => { });
@@ -21,7 +22,7 @@ function App() {
 		<div className="App">
 			<Router history={history}>
 				<Switch>
-					<Route exact path="/" component={Loading} />
+					<Route exact path="/" component={Home} />
 				</Switch>
 			</Router>
 		</div>

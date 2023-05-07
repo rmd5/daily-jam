@@ -6,7 +6,7 @@ export default {
     get: (path, params) => {
         return superagent.get(url + path).send(params)
             .then(res => {
-                return [200, res, null]
+                return [200, res.body.data, null]
             })
             .catch(err => {
                 return [err.status, null, err.error]
@@ -15,7 +15,7 @@ export default {
     post: (path, body) => {
         return superagent.post(url + path).send(body)
             .then(res => {
-                return [200, res, null]
+                return [200, res.body.data, null]
             })
             .catch(err => {
                 return [err.status, null, err.error]
