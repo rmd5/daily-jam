@@ -5,7 +5,7 @@ import history from "../../history"
 import { register } from "../../store/reducers/user.slice"
 import Loading from "../loading/loading"
 
-export default function Login() {
+export default function Login(props) {
     const [show, setShow] = useState(false)
     const dispatch = useDispatch()
 
@@ -21,7 +21,7 @@ export default function Login() {
         window.location.hash = ""
         console.log(stored_token)
 
-        if(stored_token !== token && token) {
+        if (stored_token !== token && token) {
             localStorage.setItem(key, token)
             createUser(token)
             return
@@ -42,18 +42,19 @@ export default function Login() {
     }
 
     async function createUser(token) {
-        let [status, data, ] = await agent.post("/user", {}, { token })
+        let [status, data,] = await agent.post("/user", {}, { token })
         if (status !== 200) {
             localStorage.removeItem("dailyjam:token")
             setShow(true)
             return
         }
         dispatch(register(data))
-        history.goBack()
+        props.setLocation("/")
+        history.push("/")
     }
 
     async function getMe(token) {
-        let [status, data, ] = await agent.get("/user", {}, { token })
+        let [status, data,] = await agent.get("/user", {}, { token })
         if (status !== 200) {
             localStorage.removeItem("dailyjam:token")
             setShow(true)
@@ -65,5 +66,10 @@ export default function Login() {
 
     return show ? <div>
         <a href={`${process.env.REACT_APP_AUTH_ENDPOINT}?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=${process.env.REACT_APP_RESPONSE_TYPE}`}>Login to Spotify</a>
+        <button onClick={() => {
+            localStorage.setItem("dailyjam:ignorelogin", true)
+            props.setLocation("/")
+            history.push("/")
+        }}>Continue as guest</button>
     </div> : <Loading loading={!show} />
 }

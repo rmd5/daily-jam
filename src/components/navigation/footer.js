@@ -9,6 +9,12 @@ export default function FooterNav(props) {
 
     useEffect(() => {
         if (props.location !== active) {
+            setActive(props.location)
+        }
+    }, [props.location]) // eslint-disable-line react-hooks/exhaustive-deps
+
+    useEffect(() => {
+        if (props.location !== active) {
             props.setLocation(active)
         }
     }, [active]) // eslint-disable-line react-hooks/exhaustive-deps

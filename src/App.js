@@ -14,6 +14,7 @@ import History from "./components/history/history";
 import { set_loading } from "./store/reducers/loading.slice";
 import Header from "./components/header/header";
 import Login from "./components/login/login";
+import Account from "./components/account/account";
 
 function App() {
 	const theme = useSelector((state) => state.theme.value)
@@ -37,7 +38,8 @@ function App() {
 	// }
 
 	useEffect(() => {
-		if (!user) {
+		if (!user && !localStorage.getItem("dailyjam:ignorelogin")) {
+			setLocation("/login")
 			history.push("/login")
 		}
 		getEmbed()
@@ -95,19 +97,20 @@ function App() {
 		<div className={theme}>
 			<Loading loading={loading} />
 
-			<Header />
+			<Header setLocation={setLocation} location={location} />
 
 			<div className="main">
 				<Router history={history}>
 
 					{/* Rendering outside of route to prevent rerender on page change */}
-					<div hidden={window.location.pathname !== "/"}>
+					<div hidden={location !== "/"}>
 						<Home />
 					</div>
 
 					<Switch>
-						<Route exact path="/login"><Login /></Route>
+						<Route exact path="/login"><Login setLocation={setLocation} /></Route>
 						<Route exact path="/history"><History /></Route>
+						<Route exact path="/account"><Account setLocation={setLocation} /></Route>
 					</Switch>
 				</Router>
 			</div>
