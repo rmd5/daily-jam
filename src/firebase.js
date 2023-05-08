@@ -24,7 +24,7 @@ export const fetchToken = (setTokenFound) => {
 			console.log('current token for client: ', currentToken);
 			let subscribed = await localStorage.getItem("dailyjam:notifications")
 			if (!subscribed) {
-				let [status, data, error] = await agent.post("/notifications/subscribe", { token: currentToken })
+				let [, data, error] = await agent.post("/notifications/subscribe", { token: currentToken })
 				if (error) {
 					console.log(error)
 				} else {

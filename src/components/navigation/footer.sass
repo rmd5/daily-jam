@@ -1,0 +1,23 @@
+.footer
+    z-index: 60,
+    position: fixed
+    bottom: 0px
+    left: 0px
+    width: calc(100% - 2px)
+    display: flex
+
+    .item
+        flex: 1
+        text-align: center
+        background-color: #f0f0f0
+        font-size: 20px
+        padding-top: 12px
+        padding-bottom: 12px
+        transition: color 0.2s ease, background-color 0.2s ease
+
+        &.active
+            background-color: black
+            color: #f0f0f0
+            font-size: 24px
+            padding-top: 10px
+            padding-bottom: 10px

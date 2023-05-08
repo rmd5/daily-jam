@@ -21,7 +21,6 @@ const messaging = firebase.messaging();
 messaging.onBackgroundMessage(function (payload) {
     console.log('Received background message ', payload);
     data = payload.data
-    console.log(data)
 
     const notificationTitle = data.title;
     const notificationOptions = {
@@ -42,7 +41,6 @@ self.addEventListener('notificationclick', function (event) {
 
     event.waitUntil(
         clients.matchAll().then(function (clientList) {
-            console.log(clientList)
                 for (var i = 0; i < clientList.length; i++) {
                     var client = clientList[i];
                     if (client.url == '/' && 'focus' in client)
