@@ -5,6 +5,11 @@ import history from "../../history"
 import { register } from "../../store/reducers/user.slice"
 import Loading from "../loading/loading"
 
+import spotify from "../../assets/spotify-logo.png"
+import symbol from "../../assets/spotify-btn.png"
+
+import "./login.sass"
+
 export default function Login(props) {
     const [show, setShow] = useState(false)
     const dispatch = useDispatch()
@@ -64,12 +69,35 @@ export default function Login(props) {
         history.goBack()
     }
 
-    return show ? <div>
-        <a href={`${process.env.REACT_APP_AUTH_ENDPOINT}?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=${process.env.REACT_APP_RESPONSE_TYPE}`}>Login to Spotify</a>
-        <button onClick={() => {
+    return show ? <div className="login">
+        <img src={spotify} alt="Spotify logo" className="spotify-logo" />
+
+        <div className="reasons">
+            <ul>
+                <li>Keep track of your progress</li>
+                <li>Earn badges</li>
+                <li>Unlock additional features</li>
+                <li>Count towards your Spotify wrapped</li>
+            </ul>
+        </div>
+
+        <div onClick={() => {
+            window.location.href=`${process.env.REACT_APP_AUTH_ENDPOINT}?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=${process.env.REACT_APP_RESPONSE_TYPE}`
+        }} className="spotify-connect">
+            <img className="symbol" src={symbol} alt="Spotify symbol"/>
+            <div className="text">Connect to Spotify</div>
+        </div>
+
+        <div className="or">
+            <hr />
+            <div className="text">OR</div>
+        </div>
+
+
+        <div className="guest" onClick={() => {
             localStorage.setItem("dailyjam:ignorelogin", true)
             props.setLocation("/")
             history.push("/")
-        }}>Continue as guest</button>
+        }}>Continue as guest</div>
     </div> : <Loading loading={!show} />
 }
