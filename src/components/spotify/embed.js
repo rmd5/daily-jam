@@ -11,6 +11,6 @@ export default function Embed(props) {
         width="100%" height="380"
         frameBorder="0"
         allowFullScreen={true}
-        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        allow="encrypted-media"
         loading="lazy" />
 }

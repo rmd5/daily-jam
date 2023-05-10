@@ -15,10 +15,13 @@ import { set_loading } from "./store/reducers/loading.slice";
 import Header from "./components/header/header";
 import Login from "./components/login/login";
 import Account from "./components/account/account";
+import Starred from "./components/starred/starred";
+import AlbumById from "./components/album_by_id/album_by_id";
 
 function App() {
 	const theme = useSelector((state) => state.theme.value)
 	const user = useSelector(state => state.user.value)
+	const album = useSelector(state => state.albums.recent)
 	const dispatch = useDispatch()
 	const loading = useSelector(state => state.loading.value)
 	const [location, setLocation] = useState(history.location.pathname)
@@ -104,13 +107,16 @@ function App() {
 
 					{/* Rendering outside of route to prevent rerender on page change */}
 					<div hidden={location !== "/"}>
-						<Home />
+						<Home album={album} />
 					</div>
 
 					<Switch>
 						<Route exact path="/login"><Login setLocation={setLocation} /></Route>
 						<Route exact path="/history"><History /></Route>
+						{user ? <Route exact path="/starred"><Starred /></Route> : null}
 						<Route exact path="/account"><Account setLocation={setLocation} /></Route>
+						<Route exact path="/settings"></Route>
+						<Route path="/:id" component={AlbumById}></Route>
 					</Switch>
 				</Router>
 			</div>

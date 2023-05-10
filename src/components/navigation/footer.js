@@ -1,10 +1,12 @@
-import { HistoryOutlined, HomeOutlined, SettingOutlined } from "@ant-design/icons"
+import { HistoryOutlined, HomeOutlined, SettingOutlined, StarOutlined } from "@ant-design/icons"
 import React, { useEffect, useState } from "react"
+import { useSelector } from "react-redux"
 import history from "../../history"
 
 import "./footer.sass"
 
 export default function FooterNav(props) {
+    const user = useSelector(state => state.user.value)
     const [active, setActive] = useState(props.location)
 
     useEffect(() => {
@@ -22,6 +24,7 @@ export default function FooterNav(props) {
     return <div className="footer">
         <Item active={active} setActive={setActive} name="Home" href="/" icon={<HomeOutlined />} />
         <Item active={active} setActive={setActive} name="History" href="/history" icon={<HistoryOutlined />} />
+        {user ? <Item active={active} setActive={setActive} name="Starred" href="/starred" icon={<StarOutlined />} /> : null}
         <Item active={active} setActive={setActive} name="Settings" href="/settings" icon={<SettingOutlined />} />
     </div>
 }

@@ -4,10 +4,26 @@
     padding: 5px
     border-radius: 5px
 
-    .date
-        font-family: sans-serif
-        font-weight: bold
-        margin-bottom: 15px
+    .head
+        z-index: 4
+        margin: -5px -20px 35px
+        background-color: #f0f0f0
+        padding-top: 15px
+        position: sticky
+        top: 0px
+        height: 4px
+        border-top-left-radius: 4px
+        border-top-right-radius: 4px
+
+        .date
+            font-family: sans-serif
+            font-weight: bold
+            background: linear-gradient(178deg, #e6e6e6 30%,transparent 100%)
+            padding: 5px
+            padding-bottom: 15px
+            margin: 0px 15px
+            border-top-left-radius: 4px
+            border-top-right-radius: 4px
 
     .history-item
         margin-bottom: 15px
@@ -18,23 +34,33 @@
             display: inline-block
             vertical-align: middle
             width: 22px
-    
+
         .history-card
             background-color: white
             border-radius: 4px
             overflow: hidden
             display: inline-block
             vertical-align: middle
-            width: calc(100% - 22px)
+            width: calc(100%)
+            position: relative
 
             .image
                 vertical-align: middle
+                width: 120px
 
             .info
                 margin-left: 15px
                 display: inline-block
                 vertical-align: middle
                 width: calc(100% - 135px)
+                height: 105px
+                padding-top: 15px
+
+                .date
+                    font-family: sans-serif
+                    font-size: 12px
+                    margin-bottom: 5px
+                    font-size: 10px
 
                 .album, .artists
                     white-space: nowrap
@@ -42,15 +68,36 @@
                     text-overflow: ellipsis
                     font-family: sans-serif
                     font-size: 12px
+                    margin-right: 5px
 
-            .play
-                color: #1cd760
-                display: inline-block
-                vertical-align: middle
-                font-size: 46px
-                margin: 5px
-                border-radius: 50px
-                box-shadow: 0 4px 8px rgba(0,0,0,.3)
+                .album
+                    font-weight: bold
+
+                .options
+                    position: absolute
+                    right: 0px
+                    bottom: 0px
+                    padding: 5px
+
+                    .button
+                        display: inline-block
+                        vertical-align: middle
+                        margin-bottom: 5px
+                        font-size: 18px
+                        padding: 0px 5px
+                        color: #686868
+                        cursor: pointer
+                        line-height: 6px
+
+                        &:hover
+                            color: black
+
+                    .play
+                        color: #1cd760
+                        font-size: 46px
+                        margin: 5px 5px 5px 10px
+                        border-radius: 50px
+                        box-shadow: 0 4px 8px rgba(0,0,0,.3)
 
         &:last-child
             margin-bottom: 0px

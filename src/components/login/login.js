@@ -74,9 +74,9 @@ export default function Login(props) {
 
         <div className="reasons">
             <ul>
+                <li>Save your new found favourite albums</li>
                 <li>Keep track of your progress</li>
                 <li>Earn badges</li>
-                <li>Unlock additional features</li>
                 <li>Count towards your Spotify wrapped</li>
             </ul>
         </div>
