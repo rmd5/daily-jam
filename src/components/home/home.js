@@ -25,7 +25,7 @@ export default function Home(props) {
     }, [copied])
 
     return <div className={`home`}>
-        <Embed album={album} />
+        <Embed album={album} duration={props.duration} position={props.position} paused={props.paused} context={props.context} />
         <div className="options">
             {user ? <div className="button">
                 <StarOutlined />

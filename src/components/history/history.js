@@ -1,14 +1,10 @@
-import { LinkOutlined, PlayCircleFilled, ShareAltOutlined, StarOutlined } from "@ant-design/icons"
-import CheckIcon from '@mui/icons-material/Check';
 import React, { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
-import copy from "copy-to-clipboard"
 
 import "./history.sass"
-import history from "../../history";
+import Embed from "../spotify/embed";
 
 export default function History(props) {
-    const user = useSelector(state => state.user.value)
     const albums = useSelector(state => state.albums.history)
     const [categorized, setCatagorized] = useState({})
     const [copied, setCopied] = useState(null)
@@ -23,7 +19,7 @@ export default function History(props) {
 
     useEffect(() => {
         categorize()
-    }, [albums])
+    }, [albums]) // eslint-disable-line react-hooks/exhaustive-deps
 
     const monthNames = ["January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"
@@ -31,7 +27,7 @@ export default function History(props) {
 
     function categorize() {
         let monthly = {}
-        for (let i = 0; i < albums?.length; i++) {
+        for (let i = 1; i < albums?.length; i++) {
             let album = albums[i]
 
             let date = new Date(album?.date)
@@ -50,53 +46,12 @@ export default function History(props) {
         let value = e[1]
 
         return <div key={key} className="history">
-            <div className="head">
-                <div className="date">
-                    {key}
-                </div>
+            <div className="date">
+                {key}
             </div>
             {value?.map(e => {
-                let date = new Date(e.date)
-                let day = date.getDate()
-                let month = date.getMonth() + 1
-                let year = date.getFullYear()
                 return <div key={e?.spotify_id} className="history-item">
-                    <div className="history-card" key={e?.spotify_id}>
-                        <img className="image" src={e?.raw?.images?.[1]?.url} alt={e?.raw?.name} />
-                        <div className="info">
-                            <div className="date">{`${day}.${month}.${year}`}</div>
-                            <div className="album">{e?.raw?.name}</div>
-                            <div className="artists">{e?.raw?.artists.map((artist, n) => {
-                                if (e?.raw?.artists.length > 2) {
-                                    if (n === e?.raw?.artists.length - 1) {
-                                        return ` & ${artist.name}`
-                                    } else if (n >= 1) {
-                                        return `, ${artist.name}`
-                                    }
-                                    return artist.name
-                                }
-                                return artist.name
-                            })}</div>
-                            <div className="options">
-                                {user ? <div className="button">
-                                    <StarOutlined />
-                                </div> : null}
-
-                                <div className="button" onClick={() => {
-                                    copy(window.location.origin + "/" + e?.spotify_id)
-                                    setCopied(e?.spotify_id)
-                                }}>
-                                    {copied !== e?.spotify_id ? <LinkOutlined /> : <CheckIcon style={{ fontSize: "18px" }} />}
-                                </div>
-
-                                <div className="button">
-                                    <ShareAltOutlined />
-                                </div>
-
-                                <PlayCircleFilled onClick={() => history.push("/" + e?.spotify_id)} className="play" />
-                            </div>
-                        </div>
-                    </div>
+                    <Embed album={e} duration={props.duration} position={props.position} paused={props.paused} context={props.context} />
                 </div>
             })}
         </div>

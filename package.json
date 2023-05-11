@@ -12,6 +12,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "colorthief": "^2.4.0",
     "copy-to-clipboard": "^3.3.3",
     "firebase": "^9.21.0",
     "history": "^4.10.1",

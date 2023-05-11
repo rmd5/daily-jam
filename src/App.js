@@ -17,6 +17,9 @@ import Login from "./components/login/login";
 import Account from "./components/account/account";
 import Starred from "./components/starred/starred";
 import AlbumById from "./components/album_by_id/album_by_id";
+import { store_device } from "./store/reducers/player.slice";
+
+import superagent from "superagent"
 
 function App() {
 	const theme = useSelector((state) => state.theme.value)
@@ -26,19 +29,74 @@ function App() {
 	const loading = useSelector(state => state.loading.value)
 	const [location, setLocation] = useState(history.location.pathname)
 
-	// function changeTheme() {
-	// 	switch (theme) {
-	// 		case "light":
-	// 			dispatch(change("dark"))
-	// 			break
-	// 		case "dark":
-	// 			dispatch(change("light"))
-	// 			break
-	// 		default:
-	// 			console.log("something went wrong with themes")
-	// 			break
-	// 	}
-	// }
+	const [duration, setDuration] = useState(0)
+	const [position, setPosition] = useState(0)
+	const [paused, setPaused] = useState(true)
+	const [context, setContext] = useState(null)
+
+	function check_token() {
+		let key = "dailyjam:token"
+
+		let stored_token_obj = JSON.parse(localStorage.getItem(key))
+		let expiry = stored_token_obj?.expiry
+
+		let today = new Date()
+		if (new Date(expiry) < today) {
+			setLocation("/login")
+			history.push("/login")
+		}
+	}
+
+	useEffect(() => {
+		if (user?.token && album?.raw?.uri) {
+			check_token()
+
+			const script = document.createElement("script");
+			script.src = "https://sdk.scdn.co/spotify-player.js";
+			script.async = true;
+
+			document.body.appendChild(script);
+
+			window.onSpotifyWebPlaybackSDKReady = () => {
+				const token = user?.token
+				const player = new window.Spotify.Player({
+					name: 'Daily Jam',
+					getOAuthToken: cb => { cb(token); }
+				});
+
+				// Ready
+				player.addListener('ready', ({ device_id }) => {
+					dispatch(store_device(device_id))
+					superagent.put("https://api.spotify.com/v1/me/player")
+						.set({ "Authorization": `Bearer ${user?.token}` }).send({
+							device_ids: [device_id]
+						}).then(() => {
+							dispatch(set_loading(false))
+						}).catch(err => {
+							console.log(err)
+						})
+				});
+
+				// Not Ready
+				player.addListener('not_ready', ({ device_id }) => {
+					console.log('Device ID has gone offline', device_id);
+				});
+
+				player.addListener('player_state_changed', (res) => {
+					if (res) {
+						let { duration, position, paused, context } = res
+						setPaused(paused)
+						setPosition(position)
+						setDuration(duration)
+						setContext(context)
+						player.activateElement()
+					}
+				});
+
+				player.connect();
+			}
+		}
+	}, [user, album]) // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
 		if (!user && !localStorage.getItem("dailyjam:ignorelogin")) {
@@ -65,9 +123,6 @@ function App() {
 
 			if (tomorrow > new Date()) {
 				dispatch(set(jsonAlbums))
-				setTimeout(() => {
-					dispatch(set_loading(false))
-				}, 1000)
 				return
 			}
 		}
@@ -81,9 +136,6 @@ function App() {
 
 		localStorage.setItem(key, JSON.stringify(data))
 		dispatch(set(data))
-		setTimeout(() => {
-			dispatch(set_loading(false))
-		}, 1000)
 		return
 	}
 
@@ -104,19 +156,14 @@ function App() {
 
 			<div className="main">
 				<Router history={history}>
-
-					{/* Rendering outside of route to prevent rerender on page change */}
-					<div hidden={location !== "/"}>
-						<Home album={album} />
-					</div>
-
 					<Switch>
+						<Route exact path="/"><Home album={album} duration={duration} position={position} paused={paused} context={context} /></Route>
 						<Route exact path="/login"><Login setLocation={setLocation} /></Route>
-						<Route exact path="/history"><History /></Route>
+						<Route exact path="/history"><History duration={duration} position={position} paused={paused} context={context} /></Route>
 						{user ? <Route exact path="/starred"><Starred /></Route> : null}
 						<Route exact path="/account"><Account setLocation={setLocation} /></Route>
 						<Route exact path="/settings"></Route>
-						<Route path="/:id" component={AlbumById}></Route>
+						<Route path="/:id" render={(props) => <AlbumById duration={duration} position={position} paused={paused} context={context} {...props} />}></Route>
 					</Switch>
 				</Router>
 			</div>
