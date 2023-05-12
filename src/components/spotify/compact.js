@@ -4,6 +4,7 @@ import agent from "../../constants/agent"
 import player from "../../constants/player"
 import { register } from "../../store/reducers/user.slice"
 import ColorThief from 'colorthief'
+import tinycolor from "tinycolor2"
 
 import "./compact.sass"
 
@@ -24,6 +25,7 @@ export default function Compact(props) {
     const [refresh, setRefresh] = useState(false)
 
     const [color, setColor] = useState("")
+    const [dark, setDark] = useState(false)
     const [active, setActive] = useState(null)
     const [hover, setHover] = useState(null)
 
@@ -147,21 +149,31 @@ export default function Compact(props) {
     useEffect(() => {
         if (album?.color) {
             setColor(album.color)
+            console.log(tinycolor(album.color).getBrightness())
+            if (tinycolor(album.color).getBrightness() < 70) {
+                setDark(tinycolor(album.color).getBrightness())
+            }
         }
         if (album?.raw?.images?.length > 0 && album && !album?.color) {
             const colorThief = new ColorThief();
             const img = document.getElementById(album?.raw?.uri);
 
             if (img.complete) {
-                let [r, g, b] = colorThief.getColor(img)
+                let [r, g, b] = colorThief.getPalette(img, 2)[1]
                 let hex = shadeColor(rgbToHex(r, g, b), -20)
                 setColor(hex)
+                if (tinycolor(hex).getBrightness() < 70) {
+                    setDark(tinycolor(hex).getBrightness())
+                }
                 update_color(hex)
             } else {
                 img.addEventListener('load', function () {
-                    let [r, g, b] = colorThief.getColor(img)
+                    let [r, g, b] = colorThief.getPalette(img, 2)[1]
                     let hex = shadeColor(rgbToHex(r, g, b), -20)
                     setColor(hex)
+                    if (tinycolor(hex).getBrightness() < 70) {
+                        setDark(tinycolor(hex).getBrightness())
+                    }
                     update_color(hex)
                 })
             }
@@ -231,9 +243,9 @@ export default function Compact(props) {
                     </div>
                 </div>
             </div>
-            <div className="tracks" style={{ backgroundColor: shadeColor(color, -10) }}>
+            <div className="tracks" style={{ backgroundColor: dark ? shadeColor(color, dark < 30 ? 30 : dark < 50 ? 25 : dark < 60 ? 15 : 10) : shadeColor(color, -10) }}>
                 {album?.raw?.tracks?.items.map((track, n) => {
-                    return <div onClick={active === track.uri ? paused ? resume : pause : () => play_track(track.uri, n)} onMouseOver={() => setHover(n)} onMouseOut={() => setHover(null)} key={n} className="track" style={{ backgroundColor: active === track.uri || hover === n ? shadeColor(color, -20) : "" }}>
+                    return <div onClick={active === track.uri ? paused ? resume : pause : () => play_track(track.uri, n)} onMouseOver={() => setHover(n)} onMouseOut={() => setHover(null)} key={n} className="track" style={{ backgroundColor: active === track.uri || hover === n ? dark ? shadeColor(color, dark < 30 ? 60 : dark < 50 ? 50 : dark < 60 ? 30 : 20) : shadeColor(color, -20) : "" }}>
                         <div className="num">
                             {active === track.uri || hover === n ?
                                 paused ? <svg viewBox="0 0 16 16" className="track_play"><path d="M3 1.713a.7.7 0 0 1 1.05-.607l10.89 6.288a.7.7 0 0 1 0 1.212L4.05 14.894A.7.7 0 0 1 3 14.288V1.713z"></path></svg>
