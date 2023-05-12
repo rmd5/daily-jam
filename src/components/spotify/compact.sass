@@ -162,14 +162,21 @@
             .info
                 display: inline-block
                 vertical-align: middle
+                width: calc(100% - 60px)
 
                 .title
                     font-size: 14px
                     margin-bottom: 2px
+                    overflow-x: hidden
+                    text-overflow: ellipsis
+                    white-space: nowrap
 
                 .artists
                     font-size: 11px
                     opacity: 0.5
+                    overflow-x: hidden
+                    text-overflow: ellipsis
+                    white-space: nowrap
 
             .time
                 opacity: 0.5

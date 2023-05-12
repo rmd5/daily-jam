@@ -14,6 +14,7 @@ export default function Compact(props) {
     const [album, setAlbum] = useState(props.album)
 
     useEffect(() => {
+        console.log(props.album)
         setAlbum(props.album)
     }, [props.album])
 
@@ -110,7 +111,6 @@ export default function Compact(props) {
     // const repeat = (state) => wrapInRefresh(() => spotify.repeat(state))
 
     function millisToMinutesAndSeconds(millis) {
-        if (refresh) return "00:00"
         const date = new Date(millis);
         let seconds = date.getSeconds()
         let minutes = date.getMinutes()
@@ -149,7 +149,6 @@ export default function Compact(props) {
     useEffect(() => {
         if (album?.color) {
             setColor(album.color)
-            console.log(tinycolor(album.color).getBrightness())
             if (tinycolor(album.color).getBrightness() < 70) {
                 setDark(tinycolor(album.color).getBrightness())
             }
@@ -236,7 +235,7 @@ export default function Compact(props) {
                         <svg onClick={context?.metadata?.previous_items?.length === 0 ? play_album : prev} className="prev"><path d="M3.3 1a.7.7 0 0 1 .7.7v5.15l9.95-5.744a.7.7 0 0 1 1.05.606v12.575a.7.7 0 0 1-1.05.607L4 9.149V14.3a.7.7 0 0 1-.7.7H1.7a.7.7 0 0 1-.7-.7V1.7a.7.7 0 0 1 .7-.7h1.6z"></path></svg>
                         <div className="seeker" style={{ background: refresh ? "" : `linear-gradient(90deg, #ffffff 0%, #ffffff ${100 / duration * (duration - location)}%, #ffffff4d ${100 / duration * (duration - location)}%, #ffffff4d 100%)` }}></div>
                         <svg onClick={skip} className="next"><path d="M12.7 1a.7.7 0 0 0-.7.7v5.15L2.05 1.107A.7.7 0 0 0 1 1.712v12.575a.7.7 0 0 0 1.05.607L12 9.149V14.3a.7.7 0 0 0 .7.7h1.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-1.6z"></path></svg>
-                        <div className="timer">{location ? millisToMinutesAndSeconds(location) : "00:00"}</div>
+                        <div className="timer">{location ? refresh ? "00:00" : millisToMinutesAndSeconds(location) : "00:00"}</div>
                         {!props.paused && !refresh ?
                             <svg onClick={pause} className="play" viewBox="0 0 24 24"><path d="M1 12C1 5.925 5.925 1 12 1s11 4.925 11 11-4.925 11-11 11S1 18.075 1 12zm7.5-5a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-2zm5 0a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-2z"></path></svg>
                             : <svg onClick={context && !refresh ? resume : play_album} className="play" viewBox="0 0 24 24"><title>Play</title><path d="M1 12C1 5.925 5.925 1 12 1s11 4.925 11 11-4.925 11-11 11S1 18.075 1 12zm8.75-4.567a.5.5 0 0 0-.75.433v8.268a.5.5 0 0 0 .75.433l7.161-4.134a.5.5 0 0 0 0-.866L9.75 7.433z"></path></svg>}
