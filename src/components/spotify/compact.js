@@ -127,17 +127,17 @@ export default function Compact(props) {
         var G = parseInt(color.substring(3, 5), 16);
         var B = parseInt(color.substring(5, 7), 16);
 
-        R = parseInt(R * (100 + percent) / 100);
-        G = parseInt(G * (100 + percent) / 100);
-        B = parseInt(B * (100 + percent) / 100);
+        R = parseInt((R > 10 ? R : 10) * (100 + percent) / 100);
+        G = parseInt((G > 10 ? G : 10) * (100 + percent) / 100);
+        B = parseInt((B > 10 ? B : 10) * (100 + percent) / 100);
+
+        R = Math.ceil(R)
+        G = Math.ceil(G)
+        B = Math.ceil(B)
 
         R = (R < 255) ? R : 255;
         G = (G < 255) ? G : 255;
         B = (B < 255) ? B : 255;
-
-        R = Math.round(R)
-        G = Math.round(G)
-        B = Math.round(B)
 
         var RR = ((R.toString(16).length === 1) ? "0" + R.toString(16) : R.toString(16));
         var GG = ((G.toString(16).length === 1) ? "0" + G.toString(16) : G.toString(16));
@@ -242,9 +242,9 @@ export default function Compact(props) {
                     </div>
                 </div>
             </div>
-            <div className="tracks" style={{ backgroundColor: dark ? shadeColor(color, dark < 30 ? 30 : dark < 50 ? 25 : dark < 60 ? 15 : 10) : shadeColor(color, -10) }}>
+            <div className="tracks" style={{ backgroundColor: dark || dark === 0 ? shadeColor(color, dark < 10 ? 150 : dark < 20 ? 100 : dark < 30 ? 50 : dark < 50 ? 25 : dark < 60 ? 15 : 10) : shadeColor(color, -10) }}>
                 {album?.raw?.tracks?.items.map((track, n) => {
-                    return <div onClick={active === track.uri ? paused ? resume : pause : () => play_track(track.uri, n)} onMouseOver={() => setHover(n)} onMouseOut={() => setHover(null)} key={n} className="track" style={{ backgroundColor: active === track.uri || hover === n ? dark ? shadeColor(color, dark < 30 ? 60 : dark < 50 ? 50 : dark < 60 ? 30 : 20) : shadeColor(color, -20) : "" }}>
+                    return <div onClick={active === track.uri ? paused ? resume : pause : () => play_track(track.uri, n)} onMouseOver={() => setHover(n)} onMouseOut={() => setHover(null)} key={n} className="track" style={{ backgroundColor: active === track.uri || hover === n ? dark || dark === 0 ? shadeColor(color, dark < 10 ? 300 : dark < 20 ? 200 : dark < 30 ? 100 : dark < 50 ? 50 : dark < 60 ? 30 : 20) : shadeColor(color, -20) : "" }}>
                         <div className="num">
                             {active === track.uri || hover === n ?
                                 paused ? <svg viewBox="0 0 16 16" className="track_play"><path d="M3 1.713a.7.7 0 0 1 1.05-.607l10.89 6.288a.7.7 0 0 1 0 1.212L4.05 14.894A.7.7 0 0 1 3 14.288V1.713z"></path></svg>
