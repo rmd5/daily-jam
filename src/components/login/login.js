@@ -9,12 +9,14 @@ import spotify from "../../assets/spotify-logo.png"
 import symbol from "../../assets/spotify-btn.png"
 
 import "./login.sass"
+import { set_loading } from "../../store/reducers/loading.slice"
 
 export default function Login(props) {
     const [show, setShow] = useState(false)
     const dispatch = useDispatch()
 
     useEffect(() => {
+        dispatch(set_loading(false))
         login()
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
 

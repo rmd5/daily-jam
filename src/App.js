@@ -20,6 +20,7 @@ import AlbumById from "./components/album_by_id/album_by_id";
 import { store_device } from "./store/reducers/player.slice";
 
 import superagent from "superagent"
+import { register } from "./store/reducers/user.slice";
 
 function App() {
 	const theme = useSelector((state) => state.theme.value)
@@ -65,7 +66,7 @@ function App() {
 				});
 
 				// Ready
-				player.addListener('ready', ({ device_id }) => {
+				player.addListener('ready', async ({ device_id }) => {
 					dispatch(store_device(device_id))
 					superagent.put("https://api.spotify.com/v1/me/player")
 						.set({ "Authorization": `Bearer ${user?.token}` }).send({
@@ -88,10 +89,27 @@ function App() {
 						setPaused(paused)
 						setPosition(position)
 						setDuration(duration)
-						setContext(context)
+						if (context?.uri !== "") {
+							setContext(context)
+						}
 						player.activateElement()
 					}
 				});
+
+				// player.on('authentication_error', async ({ message }) => {
+				// 	let token = user?.refresh_token || localStorage.getItem("dailyjam:refresh_token")
+				// 	let [res, data,] = await agent.get("/spotify/auth/refresh", {}, { refresh_token: token })
+				// 	if (res === 200) {
+				// 		dispatch(register(data))
+
+				// 		let expires_in = new Date()
+				// 		expires_in.setSeconds(expires_in.getSeconds() + 3600)
+				// 		localStorage.setItem("dailyjam:token", JSON.stringify({
+				// 			token: data.token,
+				// 			expiry: expires_in
+				// 		}))
+				// 	}
+				// });
 
 				player.connect();
 			}

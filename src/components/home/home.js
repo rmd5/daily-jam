@@ -2,7 +2,7 @@ import { LinkOutlined, ShareAltOutlined, StarOutlined } from "@ant-design/icons"
 import CheckIcon from '@mui/icons-material/Check';
 import React, { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
-import Embed from "../spotify/embed"
+import Compact from "../spotify/compact"
 import copy from "copy-to-clipboard"
 
 import "./home.sass"
@@ -25,8 +25,8 @@ export default function Home(props) {
     }, [copied])
 
     return <div className={`home`}>
-        <Embed album={album} duration={props.duration} position={props.position} paused={props.paused} context={props.context} />
-        <div className="options">
+        <Compact album={album} duration={props.duration} position={props.position} paused={props.paused} context={props.context} />
+        {/* <div className="options">
             {user ? <div className="button">
                 <StarOutlined />
             </div> : null}
@@ -41,6 +41,6 @@ export default function Home(props) {
             <div className="button">
                 <ShareAltOutlined />
             </div>
-        </div>
+        </div> */}
     </div>
 }

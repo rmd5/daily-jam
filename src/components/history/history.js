@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 
 import "./history.sass"
-import Embed from "../spotify/embed";
+import Compact from "../spotify/compact";
 
 export default function History(props) {
     const albums = useSelector(state => state.albums.history)
@@ -51,7 +51,7 @@ export default function History(props) {
             </div>
             {value?.map(e => {
                 return <div key={e?.spotify_id} className="history-item">
-                    <Embed album={e} duration={props.duration} position={props.position} paused={props.paused} context={props.context} />
+                    <Compact album={e} duration={props.duration} position={props.position} paused={props.paused} context={props.context} />
                 </div>
             })}
         </div>

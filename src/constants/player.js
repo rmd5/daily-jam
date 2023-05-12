@@ -16,6 +16,20 @@ let player = {
                         return err
                     })
             },
+            play_track: (id, offset) => {
+                return superagent.put(url + "/v1/me/player/play")
+                    .set({ "Authorization": `Bearer ${token}` })
+                    .send({
+                        context_uri: id,
+                        offset: {
+                            position: offset
+                        }
+                    }).then(res => {
+                        return res
+                    }).catch(err => {
+                        return err
+                    })
+            },
             resume: () => {
                 superagent.put(url + "/v1/me/player/play")
                     .set({ "Authorization": `Bearer ${token}` })

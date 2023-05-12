@@ -3,11 +3,11 @@ import { useDispatch, useSelector } from "react-redux"
 import agent from "../../constants/agent"
 import player from "../../constants/player"
 import { register } from "../../store/reducers/user.slice"
-import ColorThief from '../../../node_modules/colorthief/dist/color-thief.mjs'
+import ColorThief from 'colorthief'
 
-import "./embed.sass"
+import "./compact.sass"
 
-export default function Embed(props) {
+export default function Compact(props) {
     const user = useSelector(state => state.user.value)
     const dispatch = useDispatch()
     const [album, setAlbum] = useState(props.album)
@@ -24,9 +24,12 @@ export default function Embed(props) {
     const [refresh, setRefresh] = useState(false)
 
     const [color, setColor] = useState("")
+    const [active, setActive] = useState(null)
+    const [hover, setHover] = useState(null)
 
     useEffect(() => {
         setContext(props.context)
+        setActive(props.context?.metadata?.current_item?.uri)
         if (props.context?.uri !== album?.raw?.uri) {
             setRefresh(true)
         } else {
@@ -75,7 +78,7 @@ export default function Embed(props) {
         let res = await func()
         if (res?.status === 401) {
             let token = user?.refresh_token || localStorage.getItem("dailyjam:refresh_token")
-            let [res, data, ] = await agent.get("/spotify/auth/refresh", {}, { refresh_token: token })
+            let [res, data,] = await agent.get("/spotify/auth/refresh", {}, { refresh_token: token })
             if (res === 200) {
                 dispatch(register(data))
 
@@ -87,7 +90,6 @@ export default function Embed(props) {
                 }))
 
                 setTimeout(() => {
-                    console.log("OOCH")
                     spotify = player.token(data.token)
                     func()
                 }, 1000)
@@ -97,6 +99,7 @@ export default function Embed(props) {
 
     let spotify = player.token(user?.token)
     const play_album = () => wrapInRefresh(() => spotify.play_album(album?.raw?.uri))
+    const play_track = (uri, n) => wrapInRefresh(() => spotify.play_track(album?.raw?.uri, n))
     const pause = () => wrapInRefresh(() => spotify.pause())
     const resume = () => wrapInRefresh(() => spotify.resume())
     // const seek = (pos) => wrapInRefresh(() => spotify.seek(pos))
@@ -122,8 +125,6 @@ export default function Embed(props) {
         var G = parseInt(color.substring(3, 5), 16);
         var B = parseInt(color.substring(5, 7), 16);
 
-        console.log(R, G, B)
-
         R = parseInt(R * (100 + percent) / 100);
         G = parseInt(G * (100 + percent) / 100);
         B = parseInt(B * (100 + percent) / 100);
@@ -148,7 +149,6 @@ export default function Embed(props) {
             setColor(album.color)
         }
         if (album?.raw?.images?.length > 0 && album && !album?.color) {
-            console.log("GET")
             const colorThief = new ColorThief();
             const img = document.getElementById(album?.raw?.uri);
 
@@ -179,8 +179,6 @@ export default function Embed(props) {
             return
         }
 
-        console.log(status, data, error)
-
         let key = "dailyjam:albums"
         let albums = JSON.parse(localStorage.getItem(key))
         localStorage.setItem(key, JSON.stringify(albums.map(e => {
@@ -195,6 +193,7 @@ export default function Embed(props) {
 
     return <>
         <div className="embed">
+            <div className="overflow"></div>
             <div className="album"
                 // Disco mode
                 // style={{ backgroundColor: '#' + (Math.random() * 0xFFFFFF << 0).toString(16).padStart(6, '0') }}
@@ -232,22 +231,40 @@ export default function Embed(props) {
                     </div>
                 </div>
             </div>
-            <div className="tracks">
-
+            <div className="tracks" style={{ backgroundColor: shadeColor(color, -10) }}>
+                {album?.raw?.tracks?.items.map((track, n) => {
+                    return <div onClick={active === track.uri ? paused ? resume : pause : () => play_track(track.uri, n)} onMouseOver={() => setHover(n)} onMouseOut={() => setHover(null)} key={n} className="track" style={{ backgroundColor: active === track.uri || hover === n ? shadeColor(color, -20) : "" }}>
+                        <div className="num">
+                            {active === track.uri || hover === n ?
+                                paused ? <svg viewBox="0 0 16 16" className="track_play"><path d="M3 1.713a.7.7 0 0 1 1.05-.607l10.89 6.288a.7.7 0 0 1 0 1.212L4.05 14.894A.7.7 0 0 1 3 14.288V1.713z"></path></svg>
+                                    : <svg viewBox="0 0 16 16" class="track_pause"><path d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7H2.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-2.6z"></path></svg>
+                                : n + 1}
+                        </div>
+                        <div className="info">
+                            <div className="title">
+                                {track.name}
+                            </div>
+                            <div className="artists">
+                                {track.artists.map((artist, n) => {
+                                    if (album?.raw?.artists?.length > 2) {
+                                        if (n === album?.raw?.artists?.length - 1) {
+                                            return ` & ${artist.name}`
+                                        } else if (n >= 1) {
+                                            return `, ${artist.name}`
+                                        }
+                                        return artist.name
+                                    }
+                                    return artist.name
+                                })}
+                            </div>
+                        </div>
+                        <div className="time">
+                            {millisToMinutesAndSeconds(track.duration_ms).slice(1)}
+                        </div>
+                    </div>
+                })}
             </div>
         </div>
-
-        {/* <br />
-
-        <iframe
-            title={album?.raw?.name}
-            style={{ borderRadius: "12px" }}
-            src={album?.href}
-            width="100%" height="380px"
-            frameBorder="0"
-            allowFullScreen={true}
-            allow="encrypted-media"
-            loading="lazy" /> */}
     </>
 
     // return 
