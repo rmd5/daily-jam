@@ -20,7 +20,6 @@ import AlbumById from "./components/album_by_id/album_by_id";
 import { store_device } from "./store/reducers/player.slice";
 
 import superagent from "superagent"
-import { register } from "./store/reducers/user.slice";
 
 function App() {
 	const theme = useSelector((state) => state.theme.value)
@@ -35,7 +34,7 @@ function App() {
 	const [paused, setPaused] = useState(true)
 	const [context, setContext] = useState(null)
 
-	function check_token() {
+	async function check_token() {
 		let key = "dailyjam:token"
 
 		let stored_token_obj = JSON.parse(localStorage.getItem(key))
@@ -45,6 +44,16 @@ function App() {
 		if (new Date(expiry) < today) {
 			setLocation("/login")
 			history.push("/login")
+		}
+
+		let token = stored_token_obj?.token
+		if (token) {
+			let [status,,] = await agent.get("/user", {}, { token })
+			const scope = "streaming app-remote-control user-read-playback-state user-modify-playback-state user-read-currently-playing playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public user-follow-modify user-follow-read user-read-playback-position user-top-read user-read-recently-played user-library-modify user-library-read user-read-email user-read-private"
+			if (status !== 200) {
+				localStorage.removeItem("dailyjam:token")
+				window.location.href = `${process.env.REACT_APP_AUTH_ENDPOINT}?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=${process.env.REACT_APP_RESPONSE_TYPE}&scope=${scope}`
+			}
 		}
 	}
 
@@ -96,20 +105,21 @@ function App() {
 					}
 				});
 
-				// player.on('authentication_error', async ({ message }) => {
-				// 	let token = user?.refresh_token || localStorage.getItem("dailyjam:refresh_token")
-				// 	let [res, data,] = await agent.get("/spotify/auth/refresh", {}, { refresh_token: token })
-				// 	if (res === 200) {
-				// 		dispatch(register(data))
+				player.on('authentication_error', async ({ message }) => {
+					console.log(message)
+					// let token = user?.refresh_token || localStorage.getItem("dailyjam:refresh_token")
+					// let [res, data,] = await agent.get("/spotify/auth/refresh", {}, { refresh_token: token })
+					// if (res === 200) {
+					// 	dispatch(register(data))
 
-				// 		let expires_in = new Date()
-				// 		expires_in.setSeconds(expires_in.getSeconds() + 3600)
-				// 		localStorage.setItem("dailyjam:token", JSON.stringify({
-				// 			token: data.token,
-				// 			expiry: expires_in
-				// 		}))
-				// 	}
-				// });
+					// 	let expires_in = new Date()
+					// 	expires_in.setSeconds(expires_in.getSeconds() + 3600)
+					// 	localStorage.setItem("dailyjam:token", JSON.stringify({
+					// 		token: data.token,
+					// 		expiry: expires_in
+					// 	}))
+					// }
+				});
 
 				player.connect();
 			}

@@ -4,7 +4,6 @@ let url = process.env.REACT_APP_API_URL
 
 let agent = {
     get: (path, headers, params) => {
-        console.log(params)
         return superagent.get(url + path).set(headers).query(params)
             .then(res => {
                 return [200, res.body.data, null]

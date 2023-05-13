@@ -6,6 +6,8 @@ import Compact from "../spotify/compact"
 import copy from "copy-to-clipboard"
 
 import "./home.sass"
+import OtherAlbums from "../spotify/other_albums";
+import Related from "../spotify/related";
 
 export default function Home(props) {
     const user = useSelector(state => state.user.value)
@@ -26,6 +28,8 @@ export default function Home(props) {
 
     return <div className={`home`}>
         <Compact album={album} duration={props.duration} position={props.position} paused={props.paused} context={props.context} />
+        <OtherAlbums album={album} />
+        <Related album={album} />
         {/* <div className="options">
             {user ? <div className="button">
                 <StarOutlined />

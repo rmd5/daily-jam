@@ -7,6 +7,7 @@ import ColorThief from 'colorthief'
 import tinycolor from "tinycolor2"
 
 import "./compact.sass"
+import history from "../../history"
 
 export default function Compact(props) {
     const user = useSelector(state => state.user.value)
@@ -14,7 +15,6 @@ export default function Compact(props) {
     const [album, setAlbum] = useState(props.album)
 
     useEffect(() => {
-        console.log(props.album)
         setAlbum(props.album)
     }, [props.album])
 
@@ -163,8 +163,12 @@ export default function Compact(props) {
                 setColor(hex)
                 if (tinycolor(hex).getBrightness() < 70) {
                     setDark(tinycolor(hex).getBrightness())
+                } else {
+                    setDark(false)
                 }
-                update_color(hex)
+                if (history.location.pathname === "/" || history.location.pathname === "/history") {
+                    update_color(hex)
+                }
             } else {
                 img.addEventListener('load', function () {
                     let [r, g, b] = colorThief.getPalette(img, 2)[1]
@@ -172,8 +176,12 @@ export default function Compact(props) {
                     setColor(hex)
                     if (tinycolor(hex).getBrightness() < 70) {
                         setDark(tinycolor(hex).getBrightness())
+                    } else {
+                        setDark(false)
                     }
-                    update_color(hex)
+                    if (history.location.pathname === "/" || history.location.pathname === "/history") {
+                        update_color(hex)
+                    }
                 })
             }
         }
@@ -205,11 +213,7 @@ export default function Compact(props) {
     return <>
         <div className="embed">
             <div className="overflow"></div>
-            <div className="album"
-                // Disco mode
-                // style={{ backgroundColor: '#' + (Math.random() * 0xFFFFFF << 0).toString(16).padStart(6, '0') }}
-                style={{ backgroundColor: color }}
-            >
+            <div className="album" style={{ backgroundColor: color }}>
                 <img id={album?.raw?.uri} className="cover" alt={album?.raw?.name} src={album?.raw?.images?.[1]?.url} crossOrigin="anonymous" />
                 <svg className="spotify_logo"><path d="M12 1a11 11 0 1 0 0 22 11 11 0 0 0 0-22zm5.045 15.866a.686.686 0 0 1-.943.228c-2.583-1.579-5.834-1.935-9.663-1.06a.686.686 0 0 1-.306-1.337c4.19-.958 7.785-.546 10.684 1.226a.686.686 0 0 1 .228.943zm1.346-2.995a.858.858 0 0 1-1.18.282c-2.956-1.817-7.464-2.344-10.961-1.282a.856.856 0 0 1-1.11-.904.858.858 0 0 1 .611-.737c3.996-1.212 8.962-.625 12.357 1.462a.857.857 0 0 1 .283 1.179zm.116-3.119c-3.546-2.106-9.395-2.3-12.78-1.272a1.029 1.029 0 0 1-.597-1.969c3.886-1.18 10.345-.952 14.427 1.471a1.029 1.029 0 0 1-1.05 1.77z"></path></svg>
                 <div className="info">
@@ -225,6 +229,8 @@ export default function Compact(props) {
                                     return `, ${artist.name}`
                                 }
                                 return artist.name
+                            } else if (album?.raw?.artists?.length === 2 && n === 1)  {
+                                return ` & ${artist.name}`
                             }
                             return artist.name
                         })}
@@ -243,7 +249,7 @@ export default function Compact(props) {
                 </div>
             </div>
             <div className="tracks" style={{ backgroundColor: dark || dark === 0 ? shadeColor(color, dark < 10 ? 150 : dark < 20 ? 100 : dark < 30 ? 50 : dark < 50 ? 25 : dark < 60 ? 15 : 10) : shadeColor(color, -10) }}>
-                {album?.raw?.tracks?.items.map((track, n) => {
+                {album?.raw?.tracks?.items?.map((track, n) => {
                     return <div onClick={active === track.uri ? paused ? resume : pause : () => play_track(track.uri, n)} onMouseOver={() => setHover(n)} onMouseOut={() => setHover(null)} key={n} className="track" style={{ backgroundColor: active === track.uri || hover === n ? dark || dark === 0 ? shadeColor(color, dark < 10 ? 300 : dark < 20 ? 200 : dark < 30 ? 100 : dark < 50 ? 50 : dark < 60 ? 30 : 20) : shadeColor(color, -20) : "" }}>
                         <div className="num">
                             {active === track.uri || hover === n ?
@@ -257,13 +263,15 @@ export default function Compact(props) {
                             </div>
                             <div className="artists">
                                 {track.artists.map((artist, n) => {
-                                    if (album?.raw?.artists?.length > 2) {
-                                        if (n === album?.raw?.artists?.length - 1) {
+                                    if (track.artists.length > 2) {
+                                        if (n === track.artists.length - 1) {
                                             return ` & ${artist.name}`
                                         } else if (n >= 1) {
                                             return `, ${artist.name}`
                                         }
                                         return artist.name
+                                    } else if (track.artists.length === 2 && n === 1)  {
+                                        return ` & ${artist.name}`
                                     }
                                     return artist.name
                                 })}
