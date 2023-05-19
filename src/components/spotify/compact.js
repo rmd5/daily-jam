@@ -33,7 +33,7 @@ export default function Compact(props) {
     useEffect(() => {
         setContext(props.context)
         setActive(props.context?.metadata?.current_item?.uri)
-        if (props.context?.uri !== album?.raw?.uri) {
+        if (props.context?.uri !== album?.raw?.uri || props.context?.uri !== props.context?.metadata?.current_item?.group?.uri) {
             setRefresh(true)
         } else {
             setRefresh(false)
@@ -64,24 +64,36 @@ export default function Compact(props) {
         }
     }, [props.duration, props.position, props.context, album?.raw?.uri])
 
+    const [count, setCount] = useState(0)
     useEffect(() => {
         let interval = 100
         let myInterval = setInterval(() => {
             if (!paused && !refresh) {
-                setLocation(location - interval)
+                if (count !== 0 && count % interval === 0) {
+                    setCount(0)
+                    get_current()
+                } else {
+                    setCount(count + 1)
+                    setLocation(location - interval - (interval / 100 * 9))
+                }
             }
         }, interval)
         return () => {
             clearInterval(myInterval);
         };
-    }, [location, paused, refresh])
+    }, [location, paused, refresh]) // eslint-disable-line react-hooks/exhaustive-deps
 
+    async function get_current() {
+        let current = await spotify.currently_playing()
+        setLocation(duration - current)
+    }
 
     const wrapInRefresh = async (func) => {
         let res = await func()
         if (res?.status === 401) {
             let token = user?.refresh_token || localStorage.getItem("dailyjam:refresh_token")
             let [res, data,] = await agent.get("/spotify/auth/refresh", {}, { refresh_token: token })
+            console.log(res, data)
             if (res === 200) {
                 dispatch(register(data))
 
@@ -229,7 +241,7 @@ export default function Compact(props) {
                                     return `, ${artist.name}`
                                 }
                                 return artist.name
-                            } else if (album?.raw?.artists?.length === 2 && n === 1)  {
+                            } else if (album?.raw?.artists?.length === 2 && n === 1) {
                                 return ` & ${artist.name}`
                             }
                             return artist.name
@@ -252,10 +264,11 @@ export default function Compact(props) {
                 {album?.raw?.tracks?.items?.map((track, n) => {
                     return <div onClick={active === track.uri ? paused ? resume : pause : () => play_track(track.uri, n)} onMouseOver={() => setHover(n)} onMouseOut={() => setHover(null)} key={n} className="track" style={{ backgroundColor: active === track.uri || hover === n ? dark || dark === 0 ? shadeColor(color, dark < 10 ? 300 : dark < 20 ? 200 : dark < 30 ? 100 : dark < 50 ? 50 : dark < 60 ? 30 : 20) : shadeColor(color, -20) : "" }}>
                         <div className="num">
-                            {active === track.uri || hover === n ?
+                            {active === track.uri ?
                                 paused ? <svg viewBox="0 0 16 16" className="track_play"><path d="M3 1.713a.7.7 0 0 1 1.05-.607l10.89 6.288a.7.7 0 0 1 0 1.212L4.05 14.894A.7.7 0 0 1 3 14.288V1.713z"></path></svg>
-                                    : <svg viewBox="0 0 16 16" class="track_pause"><path d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7H2.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-2.6z"></path></svg>
-                                : n + 1}
+                                    : <svg viewBox="0 0 16 16" className="track_pause"><path d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7H2.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-2.6z"></path></svg>
+                                : hover === n ? <svg viewBox="0 0 16 16" className="track_play"><path d="M3 1.713a.7.7 0 0 1 1.05-.607l10.89 6.288a.7.7 0 0 1 0 1.212L4.05 14.894A.7.7 0 0 1 3 14.288V1.713z"></path></svg>
+                                    : n + 1}
                         </div>
                         <div className="info">
                             <div className="title">
@@ -270,7 +283,7 @@ export default function Compact(props) {
                                             return `, ${artist.name}`
                                         }
                                         return artist.name
-                                    } else if (track.artists.length === 2 && n === 1)  {
+                                    } else if (track.artists.length === 2 && n === 1) {
                                         return ` & ${artist.name}`
                                     }
                                     return artist.name

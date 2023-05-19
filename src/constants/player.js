@@ -85,6 +85,16 @@ let player = {
                     }).catch(err => {
                         return err
                     })
+            },
+            currently_playing: () => {
+                return superagent.get(url + "/v1/me/player/currently_playing")
+                    .send({ market: "GB" }) // track, context or off
+                    .set({ "Authorization": `Bearer ${token}` })
+                    .then(res => {
+                        return res.body.progress_ms
+                    }).catch(err => {
+                        return err
+                    })
             }
         }
     }

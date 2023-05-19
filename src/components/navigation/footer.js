@@ -8,9 +8,7 @@ import "./footer.sass"
 export default function FooterNav(props) {
     const user = useSelector(state => state.user.value)
     const [active, setActive] = useState(props.location)
-    const [section, setSection] = useState(props.location ? 0 : null)
-
-    let pages = [
+    const pages = [
         {
             name: "Home",
             href: "/",
@@ -36,6 +34,7 @@ export default function FooterNav(props) {
             user: true
         }
     ]
+    const [section, setSection] = useState(props.location ? pages.findIndex(e => e.href === props.location) : null)
 
     useEffect(() => {
         if (props.location !== active) {
@@ -52,7 +51,8 @@ export default function FooterNav(props) {
     return <div className="footer">
         <div className="back-mover" style={{
             left: section * (100 / (user ? pages.length : pages.filter(e => !e.user).length)) + "%",
-            width: (100 / (user ? pages.length : pages.filter(e => !e.user).length)) + "%"
+            width: (100 / (user ? pages.length : pages.filter(e => !e.user).length)) + "%",
+            display: pages.filter(e => e.href === active).length === 0 ? "none" : ""
         }}></div>
         {pages.map((e, n) => {
             if (e.user) {
