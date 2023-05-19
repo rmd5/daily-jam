@@ -39,6 +39,7 @@ export default function FooterNav(props) {
     useEffect(() => {
         if (props.location !== active) {
             setActive(props.location)
+            setSection(pages.findIndex(e => e.href === props.location))
         }
     }, [props.location]) // eslint-disable-line react-hooks/exhaustive-deps
 
