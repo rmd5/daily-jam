@@ -49,7 +49,7 @@ let player = {
                     })
             },
             seek: (position) => {
-                superagent.put(url + "/v1/me/player/seek")
+                return superagent.put(url + "/v1/me/player/seek")
                     .query({ position_ms: position })
                     .set({ "Authorization": `Bearer ${token}` })
                     .then(res => {

@@ -185,7 +185,7 @@ function App() {
 			<div className="main">
 				<Router history={history}>
 					<Switch>
-						<Route exact path="/"><Home album={album} duration={duration} position={position} paused={paused} context={context} /></Route>
+						<Route exact path="/"><Home full={true} album={album} duration={duration} position={position} paused={paused} context={context} /></Route>
 						<Route exact path="/login"><Login setLocation={setLocation} /></Route>
 						<Route exact path="/history"><History duration={duration} position={position} paused={paused} context={context} /></Route>
 						{user ? <Route exact path="/starred"><Starred /></Route> : null}

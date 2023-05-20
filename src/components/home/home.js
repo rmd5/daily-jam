@@ -2,7 +2,7 @@ import { LinkOutlined, ShareAltOutlined, StarOutlined } from "@ant-design/icons"
 import CheckIcon from '@mui/icons-material/Check';
 import React, { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
-import Compact from "../spotify/compact"
+import Embed from "../spotify/embed"
 import copy from "copy-to-clipboard"
 
 import "./home.sass"
@@ -27,7 +27,7 @@ export default function Home(props) {
     }, [copied])
 
     return <div className={`home`}>
-        <Compact album={album} duration={props.duration} position={props.position} paused={props.paused} context={props.context} />
+        <Embed full={props.full} album={album} duration={props.duration} position={props.position} paused={props.paused} context={props.context} />
         <OtherAlbums album={album} />
         <Related album={album} />
         {/* <div className="options">

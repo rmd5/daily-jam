@@ -1,0 +1,366 @@
+.embed
+    border-radius: 4px
+    // overflow: hidden
+
+    .overflow
+        margin-top: -20px
+        padding-top: 20px
+        margin-bottom: -5px
+        position: sticky
+        top: 0px
+        background-color: #f0f0f0
+        z-index: 11
+
+    .container
+        z-index: 12
+        height: 500px
+        position: sticky
+        top: 15px
+        background-color: transparent
+        margin-bottom: -194px
+        padding-bottom: 15px
+
+        .full
+            padding: 15px
+            border-radius: 4px
+            text-align: center
+
+            .cover_container
+                position: relative
+                width: 100%
+                max-width: 340px
+                display: inline-block
+                vertical-align: middle
+
+                .cover
+                    border-radius: 4px
+                    width: 100%
+                    box-shadow: 0 9px 9px 0 rgba(0,0,0,.1), 0 0 29px 0 rgba(0,0,0,.1)
+
+                .spotify_logo
+                    fill: white
+                    position: absolute
+                    top: 15px
+                    right: 15px
+                    width: 24px
+                    height: 24px
+
+            .info
+                display: inline-block
+                vertical-align: middle
+                margin: 15px 0px 0px
+                overflow-x: hidden
+                text-overflow: ellipsis
+                white-space: nowrap
+                width: 100%
+                max-width: 340px
+
+                .name
+                    font-family: sans-serif
+                    color: white
+                    font-weight: normal
+                    font-size: 16px
+                    margin-bottom: 4px
+                    overflow-x: hidden
+                    text-overflow: ellipsis
+                    white-space: nowrap
+
+                .artist
+                    font-size: 14px
+                    font-weight: 450
+                    font-family: sans-serif
+                    color: white
+                    opacity: 0.7
+                    margin-bottom: 5px
+                    overflow-x: hidden
+                    text-overflow: ellipsis
+                    white-space: nowrap
+
+            @media screen and ( min-width: 740px )
+                .info
+                    width: auto
+                    max-width: calc(100% - 340px)
+                    text-align: left
+
+                    .name
+                        padding: 0px 0px 0px 15px
+                        font-size: 20px
+
+                    .artist
+                        padding: 0px 0px 0px 15px
+                        font-size: 16px
+
+            .player
+                bottom: 0px
+
+                .seek
+                    .controls
+                        display: block
+                        margin-top: 15px
+
+                        .prev, .next
+                            opacity: 0.7
+                            width: 24px
+                            height: 24px
+                            cursor: pointer
+                            transition: opacity 0.4s ease
+                            display: inline-block
+                            vertical-align: middle
+
+                            path
+                                fill: white
+
+                            &:hover
+                                opacity: 1
+
+                        .play
+                            width: 60px
+                            height: 60px
+                            fill: white
+                            display: inline-block
+                            vertical-align: middle
+                            cursor: pointer
+                            transition: transform 0.4s ease
+                            margin: 0px 15px
+
+                            &:hover
+                                transform: scale(1.1)
+
+                    .seeker
+                        max-width: 680px
+                        width: 100%
+                        height: 4px
+                        border-radius: 4px
+                        background-color: #ffffff4d
+                        display: inline-block
+                        vertical-align: middle
+                        transition: background 1s ease
+                        -webkit-appearance: none
+                        outline: none
+                        cursor: pointer
+
+                        &::-webkit-slider-thumb
+                            -webkit-appearance: none
+                            appearance: none
+                            width: 10px
+                            height: 10px
+                            border-radius: 50%
+                            background: white
+                            cursor: pointer
+
+                        &::-moz-range-thumb
+                            width: 10px
+                            height: 10px
+                            border-radius: 50%
+                            background: white
+                            cursor: pointer
+
+                    .timer
+                        margin: auto
+                        max-width: 680px
+                        width: 100%
+                        opacity: 0.7
+                        color: white
+                        font-family: sans-serif
+                        font-size: 13px
+
+                        .left
+                            float: left
+
+                        .right
+                            float: right
+
+    .compact
+        z-index: 12
+        background-color: #7c7854
+        padding: 16px 0px 16px 16px
+        position: relative
+        position: sticky
+        top: 15px
+        border-radius: 4px
+
+        .cover
+            border-radius: 4px
+            width: 112px
+            box-shadow: 0 9px 9px 0 rgba(0,0,0,.1), 0 0 29px 0 rgba(0,0,0,.1)
+            vertical-align: middle
+
+        .spotify_logo
+            fill: white
+            position: absolute
+            top: 16px
+            right: 16px
+            width: 24px
+            height: 24px
+
+        .info
+            display: inline-block
+            vertical-align: middle
+            margin: 0px 16px
+            overflow-x: hidden
+            text-overflow: ellipsis
+            white-space: nowrap
+            width: calc(100% - 144px)
+
+            .name
+                font-family: sans-serif
+                color: white
+                font-weight: normal
+                font-size: 16px
+                margin-bottom: 4px
+                overflow-x: hidden
+                text-overflow: ellipsis
+                white-space: nowrap
+
+            .artist
+                font-size: 14px
+                font-weight: 450
+                font-family: sans-serif
+                color: white
+                opacity: 0.7
+                margin-bottom: 5px
+                overflow-x: hidden
+                text-overflow: ellipsis
+                white-space: nowrap
+
+        .player
+            // width: calc(100% - 187px)
+            padding: 0px 5px 0px 0px
+            bottom: 0px
+
+            .seek
+                .seeker
+                    width: calc(100% - 175px)
+                    height: 4px
+                    border-radius: 4px
+                    background-color: #ffffff4d
+                    display: inline-block
+                    vertical-align: middle
+                    margin: 0px 8px
+                    transition: background 1s ease
+                    -webkit-appearance: none
+                    outline: none
+                    cursor: pointer
+
+                    &::-webkit-slider-thumb
+                        -webkit-appearance: none
+                        appearance: none
+                        width: 10px
+                        height: 10px
+                        border-radius: 50%
+                        background: white
+                        cursor: pointer
+
+                    &::-moz-range-thumb
+                        width: 10px
+                        height: 10px
+                        border-radius: 50%
+                        background: white
+                        cursor: pointer
+
+                .timer
+                    width: 52px
+                    text-align: right
+                    display: inline-block
+                    vertical-align: middle
+                    opacity: 0.7
+                    color: white
+                    font-family: sans-serif
+                    font-size: 13px
+
+                .prev, .next
+                    opacity: 0.7
+                    width: 16px
+                    height: 16px
+                    cursor: pointer
+                    transition: opacity 0.4s ease
+                    display: inline-block
+                    vertical-align: middle
+
+                    path
+                        fill: white
+
+                    &:hover
+                        opacity: 1
+
+                .play
+                    width: 44px
+                    height: 44px
+                    fill: white
+                    display: inline-block
+                    vertical-align: bottom
+                    margin-left: 20px
+                    cursor: pointer
+                    transition: transform 0.4s ease
+
+                    &:hover
+                        transform: scale(1.1)
+
+                    // path
+                    //     vector-effect: non-scaling-stroke
+
+    .tracks
+        margin-top: -194px
+        z-index: 9
+        padding: 204px 10px 10px
+        border-bottom-left-radius: 4px
+        border-bottom-right-radius: 4px
+
+
+        .track
+            color: white
+            font-family: sans-serif
+            padding: 10px 10px
+            border-radius: 4px
+            margin: 2px 0px
+            cursor: pointer
+
+            &:last-child
+                padding: 10px 10px
+
+            .num
+                opacity: 0.5
+                font-size: 13px
+                display: inline-block
+                vertical-align: middle
+                width: 20px
+
+                .track_play, .track_pause
+                    fill: white
+                    opacity: 0.5
+                    width: 16px
+                    height: 16px
+                    margin: 0px -4.5px
+                    margin-bottom: -1px
+                    transition: opacity 0.4s ease
+                    cursor: pointer
+
+                    &:hover
+                        opacity: 1
+
+            .info
+                display: inline-block
+                vertical-align: middle
+                width: calc(100% - 60px)
+
+                .title
+                    font-size: 14px
+                    margin-bottom: 2px
+                    overflow-x: hidden
+                    text-overflow: ellipsis
+                    white-space: nowrap
+
+                .artists
+                    font-size: 11px
+                    opacity: 0.5
+                    overflow-x: hidden
+                    text-overflow: ellipsis
+                    white-space: nowrap
+
+            .time
+                opacity: 0.5
+                font-size: 14px
+                display: inline-block
+                vertical-align: middle
+                float: right
+                line-height: 29px
