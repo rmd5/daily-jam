@@ -51,7 +51,7 @@ export default function History(props) {
             </div>
             {value?.map(e => {
                 return <div key={e?.spotify_id} className="history-item">
-                    <Embed album={e} duration={props.duration} position={props.position} paused={props.paused} context={props.context} />
+                    <Embed full={false} album={e} duration={props.duration} position={props.position} paused={props.paused} context={props.context} />
                 </div>
             })}
         </div>

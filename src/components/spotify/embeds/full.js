@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react"
+import { useResizeDetector } from "react-resize-detector";
 
 export default function FullEmbed(props) {
     let {
@@ -21,14 +22,27 @@ export default function FullEmbed(props) {
     } = props
 
     useEffect(() => {
-        if (full) window.addEventListener('scroll', scrollFunction);
-    }, [full])
+        if (full && album?.raw?.uri) {
+            window.addEventListener('scroll', scrollFunction)
+            window.addEventListener("resize", resizeFunction)
+            return () => {
+                window.removeEventListener("scroll", scrollFunction)
+                window.removeEventListener("resize", resizeFunction)
+            }
+        }
+    }, [full, album?.raw?.uri])
 
     function scrollFunction() {
         if (document.body.scrollTop > 0 || document.documentElement.scrollTop > 0) {
-            let value = 340 - (document.documentElement.scrollTop * 0.8)
-            if (value < 120) value = 120
-            if (value > 340) value = 340
+            let control = document.getElementById("full").scrollWidth - 30
+            control = control > 340 ? 340 : control
+
+            let offset = 40
+
+            let value = control - (document.documentElement.scrollTop * 1)
+            if (value < 120) value = 120 + offset
+            else if (value > control) value = control
+            else value = value + offset > control ? control : value + offset
             if (document.getElementById("shrink_cover")) {
                 document.getElementById("shrink_cover").style.maxWidth = value + "px"
             }
@@ -39,10 +53,60 @@ export default function FullEmbed(props) {
         }
     }
 
-    return <div className="container">
+    function resizeFunction() {
+        let imageWidth = document.getElementById("full").scrollWidth - 30
+        let imageHeight = imageWidth <= 340 ? imageWidth : 340
+        let currentImageHeight = document.getElementById(album?.raw?.uri).scrollHeight
+        let fullHeight = document.getElementById("full").scrollHeight
+
+        let containerHeight = fullHeight - currentImageHeight + imageHeight
+        let offset = containerHeight - (fullHeight - currentImageHeight + 160)
+        setHeight(containerHeight)
+        setMargin("-" + offset)
+        document.getElementById("tracks").style.paddingTop = (offset + 10) + "px"
+    }
+
+    useEffect(() => {
+        initialise()
+    }, [document.getElementById("full")?.scrollHeight])
+
+    function initialise() {
+        if ((document.getElementById("full")?.scrollHeight && height < document.getElementById("full")?.scrollHeight)) {
+            if (!document.getElementById(album?.raw?.uri)) {
+                setTimeout(() => {
+                    initialise()
+                }, 100)
+                return
+            } else {
+                let currentImageHeight = document.getElementById(album?.raw?.uri).scrollHeight
+                if (currentImageHeight === 0) {
+                    setTimeout(() => {
+                        initialise()
+                    }, 100)
+                    return
+                }
+
+                let imageHeight = (document.getElementById("full").scrollWidth - 30)
+                if (imageHeight > 340) imageHeight = 340
+
+                let fullHeight = document.getElementById("full").scrollHeight
+
+                setHeight(fullHeight - currentImageHeight + imageHeight)
+
+                let offset = (fullHeight - (fullHeight - currentImageHeight + 160))
+                setMargin("-" + offset)
+                document.getElementById("tracks").style.paddingTop = (offset + 10) + "px"
+            }
+        }
+    }
+
+    const [height, setHeight] = useState(300)
+    const [margin, setMargin] = useState(0)
+
+    return <div className="container" style={{ height: height, marginBottom: margin + "px" }}>
         <div className="full" id="full" style={{ backgroundColor: color }}>
             <div className="cover_container" id="shrink_cover">
-                <img id={album?.raw?.uri} className="cover" alt={album?.raw?.name} src={album?.raw?.images?.[1]?.url} crossOrigin="anonymous" />
+                <img className="cover" id={album?.raw?.uri} alt={album?.raw?.name} src={album?.raw?.images?.[1]?.url} crossOrigin="anonymous" />
                 <svg className="spotify_logo"><path d="M12 1a11 11 0 1 0 0 22 11 11 0 0 0 0-22zm5.045 15.866a.686.686 0 0 1-.943.228c-2.583-1.579-5.834-1.935-9.663-1.06a.686.686 0 0 1-.306-1.337c4.19-.958 7.785-.546 10.684 1.226a.686.686 0 0 1 .228.943zm1.346-2.995a.858.858 0 0 1-1.18.282c-2.956-1.817-7.464-2.344-10.961-1.282a.856.856 0 0 1-1.11-.904.858.858 0 0 1 .611-.737c3.996-1.212 8.962-.625 12.357 1.462a.857.857 0 0 1 .283 1.179zm.116-3.119c-3.546-2.106-9.395-2.3-12.78-1.272a1.029 1.029 0 0 1-.597-1.969c3.886-1.18 10.345-.952 14.427 1.471a1.029 1.029 0 0 1-1.05 1.77z"></path></svg>
             </div>
             <div className="info">
@@ -101,6 +165,7 @@ function FullPlayer(props) {
                 {!paused && !refresh ?
                     <svg onClick={pause} className="play" viewBox="0 0 24 24"><path d="M1 12C1 5.925 5.925 1 12 1s11 4.925 11 11-4.925 11-11 11S1 18.075 1 12zm7.5-5a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-2zm5 0a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-2z"></path></svg>
                     : <svg onClick={context && !refresh ? resume : () => {
+                        setPosition(0)
                         play_album()
                     }} className="play" viewBox="0 0 24 24"><title>Play</title><path d="M1 12C1 5.925 5.925 1 12 1s11 4.925 11 11-4.925 11-11 11S1 18.075 1 12zm8.75-4.567a.5.5 0 0 0-.75.433v8.268a.5.5 0 0 0 .75.433l7.161-4.134a.5.5 0 0 0 0-.866L9.75 7.433z"></path></svg>}
 
@@ -139,6 +204,6 @@ function millisToMinutesAndSeconds(millis) {
     const date = new Date(parseInt(millis));
     let seconds = date.getSeconds()
     let minutes = date.getMinutes()
-    if(isNaN(minutes)) console.log(millis, date)
+    if (isNaN(minutes)) console.log(millis, date)
     return `${minutes < 10 ? "0" + minutes : minutes}:${seconds < 10 ? "0" + seconds : seconds}`
 }

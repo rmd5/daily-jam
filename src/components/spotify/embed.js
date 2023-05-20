@@ -195,29 +195,36 @@ export default function Embed(props) {
         setAlbum(data)
     }
 
-    return <>
-        <div className="embed">
+    if (props.full) {
+        return <div className="embed">
             <div className="overflow"></div>
-            {props.full ?
-                <FullEmbed
-                    full={props.full}
-                    album={album} context={context} color={color}
-                    play_album={play_album} prev={prev} skip={skip} pause={pause} resume={resume} seek={seek}
-                    duration={duration} position={position} location={location} paused={paused}
-                    setPosition={setPosition}
-                    refresh={refresh} />
-                : <CompactEmbed
-                    album={album} context={context} color={color}
-                    play_album={play_album} prev={prev} skip={skip} pause={pause} resume={resume} seek={seek}
-                    duration={duration} position={position} location={location} paused={paused}
-                    setPosition={setPosition}
-                    refresh={refresh} />}
+            <FullEmbed
+                full={props.full}
+                album={album} context={context} color={color}
+                play_album={play_album} prev={prev} skip={skip} pause={pause} resume={resume} seek={seek}
+                duration={duration} position={position} location={location} paused={paused}
+                setPosition={setPosition}
+                refresh={refresh} />
             <Tracks
                 album={album} active={active}
                 dark={dark} color={color}
                 paused={paused} resume={resume} pause={pause} play_track={play_track} />
         </div>
-    </>
+    } else {
+        return <div className="embed">
+            <div className="overflow"></div>
+            <CompactEmbed
+                album={album} context={context} color={color}
+                play_album={play_album} prev={prev} skip={skip} pause={pause} resume={resume} seek={seek}
+                duration={duration} position={position} location={location} paused={paused}
+                setPosition={setPosition}
+                refresh={refresh} />
+            <Tracks
+                album={album} active={active}
+                dark={dark} color={color}
+                paused={paused} resume={resume} pause={pause} play_track={play_track} />
+        </div>
+    }
 }
 
 function Tracks(props) {
@@ -234,7 +241,7 @@ function Tracks(props) {
 
     const [hover, setHover] = useState(null)
 
-    return <div className="tracks" style={{ backgroundColor: dark || dark === 0 ? shadeColor(color, dark < 10 ? 150 : dark < 20 ? 100 : dark < 30 ? 50 : dark < 50 ? 25 : dark < 60 ? 15 : 10) : shadeColor(color, -10) }}>
+    return <div className="tracks" id="tracks" style={{ backgroundColor: dark || dark === 0 ? shadeColor(color, dark < 10 ? 150 : dark < 20 ? 100 : dark < 30 ? 50 : dark < 50 ? 25 : dark < 60 ? 15 : 10) : shadeColor(color, -10) }}>
         {album?.raw?.tracks?.items?.map((track, n) => {
             return <div onClick={active === track.uri ? paused ? resume : pause : () => play_track(track.uri, n)} onMouseOver={() => setHover(n)} onMouseOut={() => setHover(null)} key={n} className="track" style={{ backgroundColor: active === track.uri || hover === n ? dark || dark === 0 ? shadeColor(color, dark < 10 ? 300 : dark < 20 ? 200 : dark < 30 ? 100 : dark < 50 ? 50 : dark < 60 ? 30 : 20) : shadeColor(color, -20) : "" }}>
                 <div className="num">

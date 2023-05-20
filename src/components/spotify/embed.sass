@@ -13,17 +13,19 @@
 
     .container
         z-index: 12
-        height: 500px
+        height: 515px
         position: sticky
         top: 15px
         background-color: transparent
-        margin-bottom: -194px
-        padding-bottom: 15px
+        margin-bottom: -74px
+        // padding-bottom: 15px
+        pointer-events: none
 
         .full
             padding: 15px
             border-radius: 4px
             text-align: center
+            pointer-events: auto
 
             .cover_container
                 position: relative
@@ -297,13 +299,10 @@
                     &:hover
                         transform: scale(1.1)
 
-                    // path
-                    //     vector-effect: non-scaling-stroke
-
     .tracks
-        margin-top: -194px
+        margin-top: -74px
         z-index: 9
-        padding: 204px 10px 10px
+        padding: 84px 10px 10px
         border-bottom-left-radius: 4px
         border-bottom-right-radius: 4px
 
