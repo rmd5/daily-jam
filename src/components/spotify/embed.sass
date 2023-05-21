@@ -1,6 +1,6 @@
 .embed
     border-radius: 4px
-    // overflow: hidden
+    position: relative
 
     .overflow
         margin-top: -20px
@@ -13,12 +13,9 @@
 
     .container
         z-index: 12
-        height: 515px
         position: sticky
         top: 15px
         background-color: transparent
-        margin-bottom: -74px
-        // padding-bottom: 15px
         pointer-events: none
 
         .full
@@ -28,11 +25,12 @@
             pointer-events: auto
 
             .cover_container
-                position: relative
                 width: 100%
                 max-width: 340px
                 display: inline-block
                 vertical-align: middle
+                transition: max-width 0.4s ease
+                position: static
 
                 .cover
                     border-radius: 4px
@@ -46,6 +44,11 @@
                     right: 15px
                     width: 24px
                     height: 24px
+                    transition: opacity 0.2s ease
+
+            @media screen and ( max-width: 475px )
+                .cover_container
+                    position: relative    
 
             .info
                 display: inline-block
