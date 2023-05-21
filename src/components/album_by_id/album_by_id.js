@@ -17,7 +17,7 @@ export default function AlbumById(props) {
         if (albums !== undefined && albums.length === 0) {
             getAlbum()
         }
-    }, [albums])
+    }, [albums]) // eslint-disable-line react-hooks/exhaustive-deps
 
     async function getAlbum() {
         if (!fetched || fetched?.spotify_id !== props.match.params.id) {
@@ -34,5 +34,5 @@ export default function AlbumById(props) {
         }
     }
 
-    return <Home album={albums !== undefined && albums.length !== 0 ? albums[0] : fetched} duration={props.duration} position={props.position} paused={props.paused} context={props.context} />
+    return <Home full album={albums !== undefined && albums.length !== 0 ? albums[0] : fetched} duration={props.duration} position={props.position} paused={props.paused} context={props.context} />
 }
