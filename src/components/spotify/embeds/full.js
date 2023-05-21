@@ -61,7 +61,7 @@ export default function FullEmbed(props) {
 
 
     const [open, toggle] = useState(false)
-    const spring = useSpring({ maxWidth: open ? 160 : 340, config: { duration: mobile ? open ? 400 : 300 : open ? 100 : 80 } })
+    const spring = useSpring({ maxWidth: open ? 160 : 340, config: { duration: mobile ? open ? 10 : 10 : open ? 100 : 80 } })
 
     function scrollFunction() {
         if (document.body.scrollTop > 0 || document.documentElement.scrollTop > 0) {
