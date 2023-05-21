@@ -61,7 +61,7 @@ export default function FullEmbed(props) {
 
 
     const [open, toggle] = useState(false)
-    const spring = useSpring({ maxWidth: open ? 160 : 340, config: { duration: mobile ? open ? 0 : 0 : open ? 100 : 80 } })
+    const spring = useSpring({ maxWidth: open ? 200 : 340, config: { duration: open ? 100 : 80 } })
 
     function scrollFunction() {
         if (document.body.scrollTop > 0 || document.documentElement.scrollTop > 0) {
@@ -91,7 +91,7 @@ export default function FullEmbed(props) {
             let shrink_c = document.getElementById("shrink_cover")
             let logo = document.getElementById("spotify_logo")
             if (shrink_c && logo) {
-                if (window.innerWidth < 475) {
+                if (window.innerWidth < 475 && !mobile) {
                     logo.style.opacity = "0"
                     setTimeout(() => {
                         shrink_c.style.position = "relative"
@@ -104,7 +104,7 @@ export default function FullEmbed(props) {
 
     return <div className="container">
         <div className="full" id="full" style={{ backgroundColor: color }}>
-            <animated.div style={spring} className="cover_container" id="shrink_cover">
+            <animated.div style={mobile ? { maxWidth: "200px", position: "static" } : spring} className="cover_container" id="shrink_cover">
                 <img className="cover" id={album?.raw?.uri} alt={album?.raw?.name} src={album?.raw?.images?.[1]?.url} crossOrigin="anonymous" />
                 <div className="link_group" id="spotify_logo">
                     <div onClick={() => {
