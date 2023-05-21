@@ -2,6 +2,7 @@ import { HeartFilled, HeartOutlined, LinkOutlined } from "@ant-design/icons";
 import React, { useEffect, useState } from "react"
 import CheckIcon from '@mui/icons-material/Check';
 import copy from "copy-to-clipboard"
+import { animated, useSpring } from '@react-spring/web'
 
 export default function FullEmbed(props) {
     let {
@@ -32,56 +33,6 @@ export default function FullEmbed(props) {
         }
     }, [full, album?.raw?.uri]) // eslint-disable-line react-hooks/exhaustive-deps
 
-    function scrollFunction() {
-        if (document.body.scrollTop > 0 || document.documentElement.scrollTop > 0) {
-            let shrink_c = document.getElementById("shrink_cover")
-            let shrink = document.getElementById(album?.raw?.uri)
-            let logo = document.getElementById("spotify_logo")
-            if (shrink && shrink_c.style.maxHeight !== "165px") {
-                shrink.style.transition = "transform 0.4s ease,margin-top 0.37s ease"
-                shrink.style.transform = "scale(0.47)"
-                shrink.style.marginTop = "-90px"
-                shrink_c.style.transition = "max-height 0.4s ease"
-                shrink_c.style.maxHeight = "165px"
-
-                // Spotify logo
-                if (window.innerWidth < 475) {
-                    if (shrink_c.style.position === "relative" || shrink_c.style.position === "") {
-                        logo.style.transition = "none"
-                        logo.style.opacity = "0"
-                        setTimeout(() => {
-                            shrink_c.style.position = "static"
-                            logo.style.transition = "opacity 0.2s ease"
-                            logo.style.opacity = "1"
-                        }, 100)
-                    }
-                } else {
-                    shrink.style.position = "static"
-                }
-            }
-        } else {
-            let shrink_c = document.getElementById("shrink_cover")
-            let shrink = document.getElementById(album?.raw?.uri)
-            let logo = document.getElementById("spotify_logo")
-            if (shrink) {
-                shrink.style.transition = "transform 0.2s ease,margin-top 0.185s ease"
-                shrink.style.transform = "scale(1)"
-                shrink.style.marginTop = "0px"
-                shrink_c.style.transition = "max-height 0.2s ease"
-                shrink_c.style.maxHeight = "340px"
-
-                // Spotify logo
-                if (window.innerWidth < 475) {
-                    logo.style.opacity = "0"
-                    setTimeout(() => {
-                        shrink_c.style.position = "relative"
-                        logo.style.opacity = "1"
-                    }, 200)
-                }
-            }
-        }
-    }
-
     const [copied, setCopied] = useState(false)
 
     useEffect(() => {
@@ -94,10 +45,22 @@ export default function FullEmbed(props) {
 
     const [saved, setSaved] = useState(false)
 
+
+    const [open, toggle] = useState(false)
+    const spring = useSpring({ maxWidth: open ? 160 : 340, config: { duration: open ? 200 : 100 } })
+
+    function scrollFunction() {
+        if (document.body.scrollTop > 0 || document.documentElement.scrollTop > 0) {
+            toggle(true)
+        } else {
+            toggle(false)
+        }
+    }
+
     return <div className="container">
         <div className="full" id="full" style={{ backgroundColor: color }}>
             <div className="cover_container" id="shrink_cover">
-                <img className="cover" id={album?.raw?.uri} alt={album?.raw?.name} src={album?.raw?.images?.[1]?.url} crossOrigin="anonymous" />
+                <animated.img style={spring} className="cover" id={album?.raw?.uri} alt={album?.raw?.name} src={album?.raw?.images?.[1]?.url} crossOrigin="anonymous" />
                 <div className="link_group" id="spotify_logo">
                     <div onClick={() => {
                         window.open("https://open.spotify.com/album/" + album?.spotify_id)
