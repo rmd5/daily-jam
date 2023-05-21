@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react"
 import CheckIcon from '@mui/icons-material/Check';
 import copy from "copy-to-clipboard"
 import { animated, useSpring } from '@react-spring/web'
+import { isMobile } from "react-device-detect";
 
 export default function FullEmbed(props) {
     let {
@@ -33,6 +34,19 @@ export default function FullEmbed(props) {
         }
     }, [full, album?.raw?.uri]) // eslint-disable-line react-hooks/exhaustive-deps
 
+    const [mobile, setMobile] = useState(true)
+
+    useEffect(() => {
+        const userAgent =
+            typeof window.navigator === "undefined" ? "" : navigator.userAgent;
+        const mobile = Boolean(
+            userAgent.match(
+                /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i
+            )
+        );
+        setMobile(mobile);
+    }, [navigator.userAgent])
+
     const [copied, setCopied] = useState(false)
 
     useEffect(() => {
@@ -47,7 +61,7 @@ export default function FullEmbed(props) {
 
 
     const [open, toggle] = useState(false)
-    const spring = useSpring({ maxWidth: open ? 160 : 340, config: { duration: open ? 100 : 80 } })
+    const spring = useSpring({ maxWidth: open ? 160 : 340, config: { duration: mobile ? open ? 30 : 30 : open ? 100 : 80 } })
 
     function scrollFunction() {
         if (document.body.scrollTop > 0 || document.documentElement.scrollTop > 0) {
