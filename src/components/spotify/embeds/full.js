@@ -91,7 +91,7 @@ export default function FullEmbed(props) {
     return <div className="container">
         <div className="full" id="full" style={{ backgroundColor: color }}>
             <div className="cover_container" id="shrink_cover">
-                <animated.img style={spring} className="cover" id={album?.raw?.uri} alt={album?.raw?.name} src={album?.raw?.images?.[0]?.url} crossOrigin="anonymous" />
+                <animated.img style={spring} className="cover" id={album?.raw?.uri} alt={album?.raw?.name} src={album?.raw?.images?.[1]?.url} crossOrigin="anonymous" />
                 <div className="link_group" id="spotify_logo">
                     <div onClick={() => {
                         window.open("https://open.spotify.com/album/" + album?.spotify_id)
