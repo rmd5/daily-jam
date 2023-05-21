@@ -51,16 +51,47 @@ export default function FullEmbed(props) {
 
     function scrollFunction() {
         if (document.body.scrollTop > 0 || document.documentElement.scrollTop > 0) {
-            toggle(true)
+            if (!open) {
+                toggle(true)
+
+                let shrink_c = document.getElementById("shrink_cover")
+                let logo = document.getElementById("spotify_logo")
+                if (shrink_c && logo) {
+                    if (window.innerWidth < 475) {
+                        if (shrink_c.style.position === "relative" || shrink_c.style.position === "") {
+                            logo.style.transition = "none"
+                            logo.style.opacity = "0"
+                            setTimeout(() => {
+                                shrink_c.style.position = "static"
+                                logo.style.transition = "opacity 0.2s ease"
+                                logo.style.opacity = "1"
+                            }, 100)
+                        }
+                    } else {
+                        shrink_c.style.position = "static"
+                    }
+                }
+            }
         } else {
             toggle(false)
+            let shrink_c = document.getElementById("shrink_cover")
+            let logo = document.getElementById("spotify_logo")
+            if (shrink_c && logo) {
+                if (window.innerWidth < 475) {
+                    logo.style.opacity = "0"
+                    setTimeout(() => {
+                        shrink_c.style.position = "relative"
+                        logo.style.opacity = "1"
+                    }, 200)
+                }
+            }
         }
     }
 
     return <div className="container">
         <div className="full" id="full" style={{ backgroundColor: color }}>
             <div className="cover_container" id="shrink_cover">
-                <animated.img style={spring} className="cover" id={album?.raw?.uri} alt={album?.raw?.name} src={album?.raw?.images?.[1]?.url} crossOrigin="anonymous" />
+                <animated.img style={spring} className="cover" id={album?.raw?.uri} alt={album?.raw?.name} src={album?.raw?.images?.[0]?.url} crossOrigin="anonymous" />
                 <div className="link_group" id="spotify_logo">
                     <div onClick={() => {
                         window.open("https://open.spotify.com/album/" + album?.spotify_id)

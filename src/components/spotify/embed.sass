@@ -31,11 +31,13 @@
                 vertical-align: middle
                 // transition: max-width 0.4s ease
                 position: static
+                will-change: height
 
                 .cover
                     border-radius: 4px
                     width: 100%
                     box-shadow: 0 9px 9px 0 rgba(0,0,0,.1), 0 0 29px 0 rgba(0,0,0,.1)
+                    will-change: max-width, max-height, width, height
 
                 .link_group
                     fill: white
@@ -43,6 +45,7 @@
                     position: absolute
                     top: 15px
                     right: 15px
+                    will-change: opacity
 
                     .spotify_logo
                         width: 24px
