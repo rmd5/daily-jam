@@ -1,0 +1,7 @@
+{
+    "name": "daily jam",
+    "integrations": {
+        "capacitor": {}
+    },
+    "type": "react"
+}

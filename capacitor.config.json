@@ -1,0 +1,11 @@
+{
+    "appId": "io.ionic.dailyjam",
+    "appName": "daily jam",
+    "bundledWebRuntime": false,
+    "npmClient": "npm",
+    "webDir": "build",
+    "cordova": {},
+    "server": {
+        "androidScheme": "https"
+    }
+}

@@ -12,11 +12,14 @@
         z-index: 11
 
     .container
-        z-index: 12
         position: sticky
         top: 15px
         background-color: transparent
         pointer-events: none
+        z-index: 12
+        border-radius: 4px
+        padding-bottom: 4px
+        margin-bottom: 31px
 
         .full
             padding: 15px
@@ -26,17 +29,21 @@
 
             .cover_container
                 width: 100%
-                max-width: 340px
                 display: inline-block
                 vertical-align: middle
-                position: static
-                will-change: height, position
+                height: 340px
+                position: relative
 
                 .cover
                     border-radius: 4px
                     width: 100%
                     box-shadow: 0 9px 9px 0 rgba(0,0,0,.1), 0 0 29px 0 rgba(0,0,0,.1)
-                    will-change: max-width, max-height, width, height
+                    will-change: transform
+                    position: absolute
+                    max-width: 340px
+                    transform: translate(-50%, 0%)
+                    top: 0px
+                    left: 50%
 
                 .link_group
                     fill: white
@@ -44,7 +51,7 @@
                     position: absolute
                     top: 15px
                     right: 15px
-                    will-change: opacity, transition
+                    will-change: top, right
 
                     .spotify_logo
                         width: 24px
@@ -64,116 +71,126 @@
                 .cover_container
                     position: relative
 
-            .info
-                display: inline-block
-                vertical-align: middle
-                margin: 15px 0px 0px
+    .details
+        position: sticky
+        top: 250px
+        text-align: center
+        padding: 0px 15px 15px
+        z-index: 13
+        border-radius: 4px
+        padding-top: 4px
+        margin-top: -35px
+
+        .info
+            display: inline-block
+            vertical-align: middle
+            margin: 0px 0px 0px
+            overflow-x: hidden
+            text-overflow: ellipsis
+            white-space: nowrap
+            width: 100%
+
+            .name
+                font-family: sans-serif
+                color: white
+                font-weight: normal
+                font-size: 16px
+                margin-bottom: 4px
                 overflow-x: hidden
                 text-overflow: ellipsis
                 white-space: nowrap
-                width: 100%
 
-                .name
-                    font-family: sans-serif
-                    color: white
-                    font-weight: normal
-                    font-size: 16px
-                    margin-bottom: 4px
-                    overflow-x: hidden
-                    text-overflow: ellipsis
-                    white-space: nowrap
+            .artist
+                font-size: 14px
+                font-weight: 450
+                font-family: sans-serif
+                color: white
+                opacity: 0.7
+                margin-bottom: 5px
+                overflow-x: hidden
+                text-overflow: ellipsis
+                white-space: nowrap
 
-                .artist
-                    font-size: 14px
-                    font-weight: 450
-                    font-family: sans-serif
-                    color: white
-                    opacity: 0.7
-                    margin-bottom: 5px
-                    overflow-x: hidden
-                    text-overflow: ellipsis
-                    white-space: nowrap
+        .player
+            bottom: 0px
 
-            .player
-                bottom: 0px
+            .seek
+                .controls
+                    display: block
+                    margin-top: 15px
 
-                .seek
-                    .controls
-                        display: block
-                        margin-top: 15px
-
-                        .prev, .next
-                            opacity: 0.7
-                            width: 24px
-                            height: 24px
-                            cursor: pointer
-                            transition: opacity 0.4s ease
-                            display: inline-block
-                            vertical-align: middle
-
-                            path
-                                fill: white
-
-                            &:hover
-                                opacity: 1
-
-                        .play
-                            width: 60px
-                            height: 60px
-                            fill: white
-                            display: inline-block
-                            vertical-align: middle
-                            cursor: pointer
-                            transition: transform 0.4s ease
-                            margin: 0px 15px
-
-                            &:hover
-                                transform: scale(1.1)
-
-                    .seeker
-                        max-width: 680px
-                        width: 100%
-                        height: 4px
-                        border-radius: 4px
-                        background-color: #ffffff4d
+                    .prev, .next
+                        opacity: 0.7
+                        width: 24px
+                        height: 24px
+                        cursor: pointer
+                        transition: opacity 0.4s ease
                         display: inline-block
                         vertical-align: middle
-                        transition: background 1s ease
-                        -webkit-appearance: none
-                        outline: none
+
+                        path
+                            fill: white
+
+                        &:hover
+                            opacity: 1
+
+                    .play
+                        width: 60px
+                        height: 60px
+                        fill: white
+                        display: inline-block
+                        vertical-align: middle
                         cursor: pointer
-                        margin: 0
+                        transition: transform 0.4s ease
+                        margin: 0px 15px
 
-                        &::-webkit-slider-thumb
-                            -webkit-appearance: none
-                            appearance: none
-                            width: 10px
-                            height: 10px
-                            border-radius: 50%
-                            background: white
-                            cursor: pointer
+                        &:hover
+                            transform: scale(1.1)
 
-                        &::-moz-range-thumb
-                            width: 10px
-                            height: 10px
-                            border-radius: 50%
-                            background: white
-                            cursor: pointer
+                .seeker
+                    max-width: 680px
+                    width: 100%
+                    height: 4px
+                    border-radius: 4px
+                    background-color: #ffffff4d
+                    display: inline-block
+                    vertical-align: middle
+                    transition: background 1s ease
+                    -webkit-appearance: none
+                    outline: none
+                    cursor: pointer
+                    margin: 0
 
-                    .timer
-                        margin: auto
-                        max-width: 680px
-                        width: 100%
-                        opacity: 0.7
-                        color: white
-                        font-family: sans-serif
-                        font-size: 13px
+                    &::-webkit-slider-thumb
+                        -webkit-appearance: none
+                        appearance: none
+                        width: 10px
+                        height: 10px
+                        border-radius: 50%
+                        background: white
+                        cursor: pointer
 
-                        .left
-                            float: left
+                    &::-moz-range-thumb
+                        width: 10px
+                        height: 10px
+                        border-radius: 50%
+                        background: white
+                        cursor: pointer
 
-                        .right
-                            float: right
+                .timer
+                    margin: auto
+                    max-width: 680px
+                    width: 100%
+                    opacity: 0.7
+                    color: white
+                    font-family: sans-serif
+                    font-size: 13px
+
+                    .left
+                        float: left
+
+                    .right
+                        float: right
 
     .compact
         z-index: 12

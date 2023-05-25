@@ -27,12 +27,45 @@ export default function FullEmbed(props) {
 
     useEffect(() => {
         if (full && album?.raw?.uri) {
+            resizeFunction()
             window.addEventListener('scroll', scrollFunction)
+            window.addEventListener('resize', resizeFunction)
             return () => {
                 window.removeEventListener("scroll", scrollFunction)
+                window.removeEventListener('resize', resizeFunction)
             }
         }
     }, [full, album?.raw?.uri]) // eslint-disable-line react-hooks/exhaustive-deps
+
+    function resizeFunction() {
+        let cov = document.getElementById("shrink_cover")
+        let cover = document.getElementById(album?.raw?.uri)
+
+        if (cov && cover) {
+            cov.style.height = cover.scrollWidth + "px"
+
+            let details = document.getElementById("details")
+            if (details) {
+                details.style.top = (250 - (340 - cover.scrollWidth)) + "px"
+            }
+        }
+
+        if (document.body.scrollTop <= 39 || document.documentElement.scrollTop <= 39) {
+            if (window.innerWidth < 475) {
+                let logo = document.getElementById("spotify_logo")
+                if (logo) {
+                    logo.style.top = "15px"
+                    logo.style.right = "15px"
+                }
+            } else {
+                let logo = document.getElementById("spotify_logo")
+                if (logo) {
+                    logo.style.top = "0px"
+                    logo.style.right = "0px"
+                }
+            }
+        }
+    }
 
     const [mobile, setMobile] = useState(true)
 
@@ -64,67 +97,67 @@ export default function FullEmbed(props) {
     const spring = useSpring({ maxWidth: open ? 200 : 340, config: { duration: open ? 100 : 80 } })
 
     function scrollFunction() {
-        if (document.body.scrollTop > 0 || document.documentElement.scrollTop > 0) {
-            if (!open) {
-                toggle(true)
+        if (document.body.scrollTop > 39 || document.documentElement.scrollTop > 39) {
+            let amount = 340 - (document.documentElement.scrollTop - 39)
+            if (amount < 200) amount = 200
 
-                let shrink_c = document.getElementById("shrink_cover")
+            let shrink = document.getElementById(album?.raw?.uri)
+            if (shrink) {
+                shrink.style.transform = `translate(-50%,-${(340 - amount) * 0.5}px)scale(${amount / 340})`
+            }
+
+            if (window.innerWidth < 475) {
                 let logo = document.getElementById("spotify_logo")
-                if (shrink_c && logo) {
-                    if (window.innerWidth < 475) {
-                        if (shrink_c.style.position === "relative" || shrink_c.style.position === "") {
-                            logo.style.transition = "none"
-                            logo.style.opacity = "0"
-                            setTimeout(() => {
-                                shrink_c.style.position = "static"
-                                logo.style.transition = "opacity 0.2s ease"
-                                logo.style.opacity = "1"
-                            }, 100)
-                        }
-                    } else {
-                        shrink_c.style.position = "static"
+                if (logo) {
+                    if (logo.style.top !== "0px") {
+                        logo.style.top = "0px"
+                        logo.style.right = "0px"
                     }
                 }
             }
         } else {
-            toggle(false)
-            let shrink_c = document.getElementById("shrink_cover")
+            let shrink = document.getElementById(album?.raw?.uri)
+            if (shrink) {
+                shrink.style.transform = `translate(-50%,0px)`
+            }
+
             let logo = document.getElementById("spotify_logo")
-            if (shrink_c && logo) {
-                if (window.innerWidth < 475 && !mobile) {
-                    logo.style.opacity = "0"
-                    setTimeout(() => {
-                        shrink_c.style.position = "relative"
-                        logo.style.opacity = "1"
-                    }, 200)
+            if (logo) {
+                if (window.innerWidth < 475 && logo.style.top !== "15px" && logo.style.top !== "") {
+                    logo.style.top = "15px"
+                    logo.style.right = "15px"
                 }
             }
         }
     }
 
-    return <div className="container">
-        <div className="full" id="full" style={{ backgroundColor: color }}>
-            <animated.div style={mobile ? { maxWidth: "200px", position: "static" } : spring} className="cover_container" id="shrink_cover">
-                <img className="cover" id={album?.raw?.uri} alt={album?.raw?.name} src={album?.raw?.images?.[1]?.url} crossOrigin="anonymous" />
-                <div className="link_group" id="spotify_logo">
-                    <div onClick={() => {
-                        window.open("https://open.spotify.com/album/" + album?.spotify_id)
-                    }}>
-                        <svg className="spotify_logo"><path d="M12 1a11 11 0 1 0 0 22 11 11 0 0 0 0-22zm5.045 15.866a.686.686 0 0 1-.943.228c-2.583-1.579-5.834-1.935-9.663-1.06a.686.686 0 0 1-.306-1.337c4.19-.958 7.785-.546 10.684 1.226a.686.686 0 0 1 .228.943zm1.346-2.995a.858.858 0 0 1-1.18.282c-2.956-1.817-7.464-2.344-10.961-1.282a.856.856 0 0 1-1.11-.904.858.858 0 0 1 .611-.737c3.996-1.212 8.962-.625 12.357 1.462a.857.857 0 0 1 .283 1.179zm.116-3.119c-3.546-2.106-9.395-2.3-12.78-1.272a1.029 1.029 0 0 1-.597-1.969c3.886-1.18 10.345-.952 14.427 1.471a1.029 1.029 0 0 1-1.05 1.77z"></path></svg>
+    return <>
+        <div className="container" style={{ backgroundColor: color }}>
+            <div className="full" id="full">
+                <animated.div id="shrink_cover" className="cover_container">
+                    <img className="cover" id={album?.raw?.uri} alt={album?.raw?.name} src={album?.raw?.images?.[1]?.url} crossOrigin="anonymous" />
+                    <div className="link_group" id="spotify_logo">
+                        <div onClick={() => {
+                            window.open("https://open.spotify.com/album/" + album?.spotify_id)
+                        }}>
+                            <svg className="spotify_logo"><path d="M12 1a11 11 0 1 0 0 22 11 11 0 0 0 0-22zm5.045 15.866a.686.686 0 0 1-.943.228c-2.583-1.579-5.834-1.935-9.663-1.06a.686.686 0 0 1-.306-1.337c4.19-.958 7.785-.546 10.684 1.226a.686.686 0 0 1 .228.943zm1.346-2.995a.858.858 0 0 1-1.18.282c-2.956-1.817-7.464-2.344-10.961-1.282a.856.856 0 0 1-1.11-.904.858.858 0 0 1 .611-.737c3.996-1.212 8.962-.625 12.357 1.462a.857.857 0 0 1 .283 1.179zm.116-3.119c-3.546-2.106-9.395-2.3-12.78-1.272a1.029 1.029 0 0 1-.597-1.969c3.886-1.18 10.345-.952 14.427 1.471a1.029 1.029 0 0 1-1.05 1.77z"></path></svg>
+                        </div>
+                        <div className="link_icon" onClick={() => {
+                            setSaved(!saved)
+                        }}>
+                            {!saved ? <HeartOutlined /> : <HeartFilled />}
+                        </div>
+                        <div className="link_icon" onClick={() => {
+                            copy(window.location.origin + "/" + album?.spotify_id)
+                            setCopied(true)
+                        }}>
+                            {!copied ? <LinkOutlined /> : <CheckIcon />}
+                        </div>
                     </div>
-                    <div className="link_icon" onClick={() => {
-                        setSaved(!saved)
-                    }}>
-                        {!saved ? <HeartOutlined /> : <HeartFilled />}
-                    </div>
-                    <div className="link_icon" onClick={() => {
-                        copy(window.location.origin + "/" + album?.spotify_id)
-                        setCopied(true)
-                    }}>
-                        {!copied ? <LinkOutlined /> : <CheckIcon />}
-                    </div>
-                </div>
-            </animated.div>
+                </animated.div>
+            </div>
+        </div>
+        <div className="details" id="details" style={{ backgroundColor: color }}>
             <div className="info">
                 <div className="name">
                     {album?.raw?.name}
@@ -152,7 +185,7 @@ export default function FullEmbed(props) {
                 setPosition={setPosition}
                 refresh={refresh} />
         </div>
-    </div>
+    </>
 }
 
 function FullPlayer(props) {

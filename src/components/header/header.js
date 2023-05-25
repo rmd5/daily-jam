@@ -2,7 +2,7 @@ import React from "react"
 
 import "./header.sass"
 
-import logo from "../../assets/logo-alt.png"
+import logo from "../../assets/daily-jam-gramophone-animation-3.gif"
 import { useSelector } from "react-redux"
 import history from "../../history"
 import { UserOutlined } from "@ant-design/icons"
