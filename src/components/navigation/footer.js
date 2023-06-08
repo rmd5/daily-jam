@@ -1,4 +1,4 @@
-import { HistoryOutlined, HomeOutlined, SettingOutlined, StarOutlined } from "@ant-design/icons"
+import { HeartOutlined, HistoryOutlined, HomeOutlined, SettingOutlined, StarOutlined } from "@ant-design/icons"
 import React, { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import history from "../../history"
@@ -24,7 +24,7 @@ export default function FooterNav(props) {
         {
             name: "Starred",
             href: "/starred",
-            icon: <StarOutlined />,
+            icon: <HeartOutlined />,
             user: true
         },
         {
@@ -49,7 +49,7 @@ export default function FooterNav(props) {
         }
     }, [active]) // eslint-disable-line react-hooks/exhaustive-deps
 
-    return <div className="footer">
+    return <div className="footer" style={{ bottom: props?.context?.metadata?.current_item ? "62px" : "0px" }}>
         <div className="back-mover" style={{
             left: section * (100 / (user ? pages.length : pages.filter(e => !e.user).length)) + "%",
             width: (100 / (user ? pages.length : pages.filter(e => !e.user).length)) + "%",
@@ -70,5 +70,7 @@ function Item(props) {
         props.setSection(props.section)
         props.setActive(props.href)
         history.push(props.href)
-    }} className={`item ${props.active === props.href ? "active" : ""}`}>{props.icon}</div>
+    }} className={`item`}>
+        <div className={`icon ${props.active === props.href ? "active" : ""}`}>{props.icon}</div>
+    </div>
 }

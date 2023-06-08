@@ -11,7 +11,7 @@ export default function Related(props) {
         setAlbum(props.album)
     }, [props.album])
 
-    return album?.similar_artists?.length > 0 ? <div className="container">
+    return album?.similar_artists?.length > 0 ? <div className="container-extras">
         <div className="heading">
             Want to explore more?
         </div>
@@ -21,13 +21,15 @@ export default function Related(props) {
         <div className="related">
             {album?.similar_artists?.map(e => {
                 if (e.images.length > 0) {
-                    return <div className="item" key={e.id}>
-                        <img className="cover" src={e.images[1]?.url} alt={e.name} />
-                        <div className="name">
-                            {e.name}
-                        </div>
-                        <div className="tag">
-                            artist
+                    return <div key={e.id} className="item-container">
+                        <div className="item">
+                            <img className="cover" src={e.images[1]?.url} alt={e.name} />
+                            <div className="name">
+                                {e.name}
+                            </div>
+                            <div className="tag">
+                                artist
+                            </div>
                         </div>
                     </div>
                 }

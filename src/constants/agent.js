@@ -29,7 +29,16 @@ let agent = {
             .catch(err => {
                 return [err.status, null, err.message]
             })
-    }
+    },
+    delete: (path, headers, body) => {
+        return superagent.delete(url + path).set(headers).send(body)
+            .then(res => {
+                return [200, res.body.data, null]
+            })
+            .catch(err => {
+                return [err.status, null, err.message]
+            })
+    },
 }
 
 export default agent

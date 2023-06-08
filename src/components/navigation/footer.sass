@@ -1,7 +1,7 @@
 .footer
     z-index: 60,
     position: fixed
-    bottom: 0px
+    bottom: 62px
     left: 0px
     width: calc(100% - 60px)
     display: flex
@@ -10,6 +10,7 @@
     border-radius: 4px
     overflow: hidden
     background-color: white
+    transition: bottom 0.4s ease
 
     .back-mover
         background-color: #1c1c1c
@@ -26,13 +27,20 @@
         text-align: center
         // background-color: #f0f0f0
         font-size: 20px
-        padding-top: 12px
-        padding-bottom: 12px
+        margin-top: 12px
+        margin-bottom: 12px
         transition: color 0.4s ease, background-color 0.2s ease
+        border-right: 1px solid #00000030
+        cursor: pointer
 
-        &.active
-            // background-color: #1c1c1c
-            color: #f0f0f0
-            font-size: 24px
-            padding-top: 10px
-            padding-bottom: 10px
+        &:last-child
+            border-right: none
+
+        .icon
+            transition: transform 0.4s ease, color 0.4s ease
+            will-change: transform color
+
+            &.active
+                // background-color: #1c1c1c
+                color: #f0f0f0
+                transform: scale(1.2)

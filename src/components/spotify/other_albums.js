@@ -13,22 +13,24 @@ export default function OtherAlbums(props) {
         setAlbum(props.album)
     }, [props.album])
 
-    return album?.other_albums?.length > 0 ? <div className="container">
+    return album?.other_albums?.length > 0 ? <div className="container-extras">
         <div className="heading">Like what you hear?</div>
         <div className="subheading">More albums by this artist</div>
         <div className="other-albums">
             {album?.other_albums?.map(e => {
                 if (e.id !== album?.spotify_id) {
-                    return <div key={e.id} onClick={() => {
-                        history.push("/" + e.id)
-                        dispatch(set_loading(true))
-                    }} className="item">
-                        <img className="cover" alt={e.name} src={e.images[1].url} />
-                        <div className="name">
-                            {e.name}
-                        </div>
-                        <div className="tag">
-                            {e.album_type}
+                    return <div key={e.id} className="item-container">
+                        <div className="item" onClick={() => {
+                            history.push("/" + e.id)
+                            dispatch(set_loading(true))
+                        }}>
+                            <img className="cover" alt={e.name} src={e.images[1].url} />
+                            <div className="name">
+                                {e.name}
+                            </div>
+                            <div className="tag">
+                                {e.album_type}
+                            </div>
                         </div>
                     </div>
                 } else return null

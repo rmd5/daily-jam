@@ -87,6 +87,9 @@ export default function Embed(props) {
                 }, 1000)
             }
         }
+        if(res?.status === 404) {
+            await func()
+        }
     }
 
     let spotify = player.token(user?.token)

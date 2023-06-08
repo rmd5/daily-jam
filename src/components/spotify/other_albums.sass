@@ -1,12 +1,15 @@
-.container
+.container-extras
+    margin: 0px -15px
+
     .heading
         font-family: sans-serif
         font-size: 12px
-        margin-top: 15px
+        margin: 15px 0px 0px 15px
         text-transform: uppercase
 
     .subheading
         font-size: 12px
+        margin: 0px 0px 0px 15px
         font-family: sans-serif
         opacity: 0.5
 
@@ -18,37 +21,42 @@
         overflow-x: auto
         scroll-snap-type: x mandatory
 
-        .item
-            margin: 0px 7.5px
+        .item-container
             display: inline-block
-            scroll-snap-align: none start
-            background-color: #2c2c2c
-            padding: 10px
-            border-radius: 4px
-            width: 180px
-            vertical-align: top
+            scroll-snap-align: none center
+            padding: 0px 7.5px
+
+            &:first-child
+                padding: 0px 7.5px 0px 15px
 
             &:last-child
-                margin: 0px 0px 0px 7.5px
+                padding: 0px 15px 0px 7.5px
 
-            .cover
-                width: 180px
+            .item
+                background-color: #2c2c2c
+                padding: 10px
                 border-radius: 4px
-                box-shadow: 0 9px 9px 0 rgba(0,0,0,.1), 0 0 29px 0 rgba(0,0,0,.1)
+                width: 180px
+                vertical-align: top
 
-            .name
-                width: 100%
-                font-family: sans-serif
-                color: white
-                font-size: 12px
-                white-space: nowrap
-                text-overflow: ellipsis
-                overflow-x: hidden
-                margin: 10px 0px 5px
+                .cover
+                    width: 180px
+                    border-radius: 4px
+                    box-shadow: 0 9px 9px 0 rgba(0,0,0,.1), 0 0 29px 0 rgba(0,0,0,.1)
 
-            .tag
-                color: white
-                opacity: 0.7
-                font-family: sans-serif
-                font-size: 10px
-                margin-bottom: 10px
+                .name
+                    width: 100%
+                    font-family: sans-serif
+                    color: white
+                    font-size: 12px
+                    white-space: nowrap
+                    text-overflow: ellipsis
+                    overflow-x: hidden
+                    margin: 10px 0px 5px
+
+                .tag
+                    color: white
+                    opacity: 0.7
+                    font-family: sans-serif
+                    font-size: 10px
+                    margin-bottom: 10px

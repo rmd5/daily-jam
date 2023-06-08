@@ -1,0 +1,73 @@
+.mini-player
+    z-index: 60,
+    position: fixed
+    bottom: 0px
+    left: 0px
+    width: 100%
+    box-shadow: 0 9px 9px 0 rgba(0,0,0,.1), 0 0 29px 0 rgba(0,0,0,.1)
+    // border-radius: 4px
+    overflow: hidden
+    background-color: #1c1c1c
+
+    .cover
+        width: 60px
+        height: 60px
+        display: inline-block
+        vertical-align: middle
+
+    .details
+        display: inline-block
+        vertical-align: middle
+        font-family: sans-serif
+        margin-left: 10px
+        overflow-x: hidden
+        text-overflow: ellipsis
+        white-space: nowrap
+        width: calc(100% - 172px)
+        color: white
+
+        .title
+            font-size: 15px
+            padding-bottom: 3px
+
+        .artist
+            font-size: 12px
+            opacity: 0.7
+
+    .player
+        display: inline-block
+        vertical-align: middle
+        padding: 0px 10px
+
+        .controls
+            .prev
+                width: 16px
+                height: 16px
+                display: inline-block
+                vertical-align: middle
+                fill: white
+                cursor: pointer
+                opacity: 0.7
+
+            .play, .pause
+                width: 30px
+                height: 30px
+                display: inline-block
+                vertical-align: middle
+                margin: 0px 10px
+                fill: white
+                cursor: pointer
+
+            .next
+                width: 16px
+                height: 16px
+                display: inline-block
+                vertical-align: middle
+                fill: white
+                cursor: pointer
+                opacity: 0.7
+
+    .seeker
+        height: 2px
+        // position: absolute
+        // bottom: 0px

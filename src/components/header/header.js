@@ -20,7 +20,7 @@ export default function Header(props) {
         <span className="text">Daily Jam</span>
         <div className="user" onClick={() => user_icon(user ? "/account" : "/login")}>
             <div className="name">{user?.display_name.split(" ")[0] || "Login"}</div>
-            {user ? <img alt="User Icon" className="icon" src={user?.images[0].url} /> : <UserOutlined className="icon login" />}
+            {user ? <img alt="User Icon" className="icon" crossOrigin="anonymous" src={user?.images[0].url} /> : <UserOutlined className="icon login" />}
         </div>
     </div>
 }

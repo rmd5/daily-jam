@@ -18,8 +18,12 @@ import Account from "./components/account/account";
 import Starred from "./components/starred/starred";
 import AlbumById from "./components/album_by_id/album_by_id";
 import { store_device } from "./store/reducers/player.slice";
+import { register } from "./store/reducers/user.slice"
 
 import superagent from "superagent"
+import MiniPlayer from "./components/spotify/mini_player";
+import { set_saved } from "./store/reducers/saved.slice";
+import Saved from "./components/saved/saved";
 
 function App() {
 	const theme = useSelector((state) => state.theme.value)
@@ -48,12 +52,13 @@ function App() {
 
 		let token = stored_token_obj?.token
 		if (token) {
-			let [status,,] = await agent.get("/user", {}, { token })
+			let [status, data,] = await agent.get("/user", {}, { token })
 			const scope = "streaming app-remote-control user-read-playback-state user-modify-playback-state user-read-currently-playing playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public user-follow-modify user-follow-read user-read-playback-position user-top-read user-read-recently-played user-library-modify user-library-read user-read-email user-read-private"
 			if (status !== 200) {
 				localStorage.removeItem("dailyjam:token")
 				window.location.href = `${process.env.REACT_APP_AUTH_ENDPOINT}?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=${process.env.REACT_APP_RESPONSE_TYPE}&scope=${scope}`
 			}
+			dispatch(set_saved(data?.saved))
 		}
 	}
 
@@ -188,7 +193,7 @@ function App() {
 						<Route exact path="/"><Home full={true} album={album} duration={duration} position={position} paused={paused} context={context} /></Route>
 						<Route exact path="/login"><Login setLocation={setLocation} /></Route>
 						<Route exact path="/history"><History duration={duration} position={position} paused={paused} context={context} /></Route>
-						{user ? <Route exact path="/starred"><Starred /></Route> : null}
+						{user ? <Route exact path="/starred"><Saved setLocation={setLocation} /></Route> : null}
 						<Route exact path="/account"><Account setLocation={setLocation} /></Route>
 						<Route exact path="/settings"></Route>
 						<Route path="/:id" render={(props) => <AlbumById duration={duration} position={position} paused={paused} context={context} {...props} />}></Route>
@@ -196,7 +201,8 @@ function App() {
 				</Router>
 			</div>
 
-			<FooterNav setLocation={setLocation} location={location} />
+			<MiniPlayer context={context} paused={paused} duration={duration} position={position} />
+			<FooterNav context={context} setLocation={setLocation} location={location} />
 		</div>
 	);
 }
