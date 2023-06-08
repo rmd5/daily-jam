@@ -16,7 +16,7 @@ export const savedSlice = createSlice({
             state.value = new_state
         },
         remove_saved: (state, action) => {
-            state.value = state.value.filter(e => e?.spotify_id !== action.payload)
+            state.value = state.value.filter(e => e?.album_id !== action.payload)
         }
     },
 })

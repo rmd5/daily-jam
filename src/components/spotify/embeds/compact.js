@@ -26,14 +26,18 @@ export default function CompactEmbed(props) {
     } = props
 
     const user = useSelector(state => state.user.value)
-    const saved = useSelector(state => state.saved.value.filter(e => e?.spotify_id === album?.spotify_id).length === 1)
+    const saved = useSelector(state => state.saved.value.filter(e => e?.album_id === album?.spotify_id).length === 1)
+    const inHistory = useSelector(state => state.albums.history?.filter(e => e.spotify_id === album?.spotify_id).length === 1)
     const dispatch = useDispatch()
 
     const [copied, setCopied] = useState(false)
 
     async function SaveAlbum() {
+        console.log(inHistory)
         let [status, data,] = await agent.post("/saved/add", {}, {
             user_id: user?.spotify_id,
+            album_id: album?.spotify_id,
+            daily_jam: inHistory,
             album: album
         })
 
@@ -47,6 +51,8 @@ export default function CompactEmbed(props) {
             user_id: user?.spotify_id,
             album_id: album?.spotify_id
         })
+
+        console.log(status, data)
 
         if (status === 200) {
             dispatch(remove_saved(album?.spotify_id))
